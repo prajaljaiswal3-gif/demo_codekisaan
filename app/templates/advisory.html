@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block title %}{{ t('nav_advisory') }} - {{ t('app_name') }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Header -->
+    <div class="text-center max-w-700 mx-auto mb-4">
+        <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-2 fw-bold mb-2">
+            <i class="bi bi-book-half me-1"></i> KISAAN KNOWLEDGE BASE • कृषी सल्लागार
+        </span>
+        <h1 class="display-6 fw-bold mb-2">{{ t('nav_advisory') }}</h1>
+        <p class="text-muted">
+            महाराष्ट्रातील प्रमुख पिकांचे एकात्मिक रोग व कीड नियंत्रण मार्गदर्शन (ICAR व महात्मा फुले कृषी विद्यापीठ मार्गदर्शक तत्त्वांवर आधारित).
+        </p>
+    </div>
+
+    <!-- Crop Filter Pills & Search -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4 p-3 bg-white rounded-3 border">
+        <!-- Filter buttons -->
+        <div class="d-flex flex-wrap gap-2">
+            <a href="{{ url_for('advisory.view_advisory') }}" class="btn btn-sm {% if not selected_crop %}btn-kisaan-primary{% else %}btn-outline-secondary{% endif %} rounded-pill px-3">
+                सर्व पिके (All Crops)
+            </a>
+            <a href="{{ url_for('advisory.view_advisory', crop='Cotton') }}" class="btn btn-sm {% if selected_crop == 'Cotton' %}btn-kisaan-primary{% else %}btn-outline-secondary{% endif %} rounded-pill px-3">
+                कापूस (Cotton)
+            </a>
+            <a href="{{ url_for('advisory.view_advisory', crop='Soybean') }}" class="btn btn-sm {% if selected_crop == 'Soybean' %}btn-kisaan-primary{% else %}btn-outline-secondary{% endif %} rounded-pill px-3">
+                सोयाबीन (Soybean)
+            </a>
+            <a href="{{ url_for('advisory.view_advisory', crop='Tomato') }}" class="btn btn-sm {% if selected_crop == 'Tomato' %}btn-kisaan-primary{% else %}btn-outline-secondary{% endif %} rounded-pill px-3">
+                टोमॅटो (Tomato)
+            </a>
+            <a href="{{ url_for('advisory.view_advisory', crop='Sugarcane') }}" class="btn btn-sm {% if selected_crop == 'Sugarcane' %}btn-kisaan-primary{% else %}btn-outline-secondary{% endif %} rounded-pill px-3">
+                ऊस (Sugarcane)
+            </a>
+            <a href="{{ url_for('advisory.view_advisory', crop='Rice') }}" class="btn btn-sm {% if selected_crop == 'Rice' %}btn-kisaan-primary{% else %}btn-outline-secondary{% endif %} rounded-pill px-3">
+                भात (Rice)
+            </a>
+        </div>
+
+        <!-- Educational distinction disclaimer -->
+        <div class="small text-muted">
+            <span class="badge bg-warning bg-opacity-25 text-dark rounded-pill px-2 py-1">
+                <i class="bi bi-shield-check text-warning"></i> प्रमाणित कृषी मार्गदर्शन
+            </span>
+        </div>
+    </div>
+
+    <!-- Advisory Cards Grid -->
+    <div class="row g-4 mb-4">
+        {% for item in advisories %}
+        <div class="col-lg-6">
+            <div class="kisaan-card h-100 p-4">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-1 fw-bold">
+                        {{ item.crop }}
+                    </span>
+                    <span class="badge bg-{{ 'danger' if item.severity == 'High' else 'warning text-dark' }} rounded-pill px-2 py-1 small">
+                        {{ item.category }} • {{ item.severity }} Severity
+                    </span>
+                </div>
+
+                <h4 class="h5 fw-bold text-dark mb-1">
+                    {{ item.title_mr }}
+                </h4>
+                <div class="small text-muted font-monospace mb-3">
+                    {{ item.title_en }}
+                </div>
+
+                <p class="text-dark small mb-3">
+                    <strong>लक्षणे:</strong> {{ item.description_mr }}
+                </p>
+
+                <!-- 2 Remedies side by side -->
+                <div class="row g-2 mb-3">
+                    <div class="col-12">
+                        <div class="p-2 rounded bg-success bg-opacity-10 border border-success border-opacity-25 small">
+                            <strong class="text-success d-block mb-1"><i class="bi bi-tree-fill me-1"></i> सेंद्रिय उपाय:</strong>
+                            {{ item.organic_remedy_mr }}
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="p-2 rounded bg-warning bg-opacity-10 border border-warning border-opacity-25 small">
+                            <strong class="text-dark d-block mb-1"><i class="bi bi-eyedropper me-1"></i> शिफारशीत रासायनिक फवारणी:</strong>
+                            {{ item.chemical_remedy_mr }}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Preventive Tip -->
+                <div class="p-2 rounded bg-light border small text-muted">
+                    <strong class="text-dark"><i class="bi bi-shield-check text-primary me-1"></i> मशागत व काळजी:</strong>
+                    {{ item.prevention_mr }}
+                </div>
+
+                <!-- Scan Leaf CTA -->
+                <div class="mt-3 text-end">
+                    <a href="{{ url_for('disease.scan_page') }}" class="btn btn-sm btn-outline-success rounded-pill px-3">
+                        <i class="bi bi-camera me-1"></i> या पिकाचे पान तपासा
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Official Advisory Note -->
+    <div class="p-3 bg-light rounded-3 border text-center small text-muted">
+        <i class="bi bi-info-circle me-1"></i>
+        <strong>मार्गदर्शक सूचना:</strong> प्रस्तुत मार्गदर्शन कृषी विद्यापीठांच्या शिफारशीनुसार तयार करण्यात आले आहे. प्रत्यक्ष वापरात स्थानिक माती व पिकाच्या अवस्थेनुसार तज्ञांचा सल्ला घ्यावा.
+    </div>
+</div>
+{% endblock %}

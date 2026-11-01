@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+
+{% block title %}रोग निदान अहवाल - {{ scan.crop_name }} - {{ t('app_name') }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Breadcrumb & Back Nav -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <a href="{{ url_for('disease.scan_page') }}" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left me-1"></i> {{ t('back_to_scan') }}
+        </a>
+        <a href="{{ url_for('dashboard.view_dashboard') }}" class="btn btn-outline-success btn-sm">
+            <i class="bi bi-speedometer2 me-1"></i> {{ t('back_to_dashboard') }}
+        </a>
+    </div>
+
+    <!-- Diagnostic Summary Header Banner -->
+    <div class="kisaan-card p-4 mb-4" style="background: linear-gradient(135deg, #f0fdf4, #ffffff); border-left: 6px solid #2e7d56;">
+        <div class="row align-items-center g-4">
+            <div class="col-md-3 text-center">
+                <img src="{{ url_for('static', filename='uploads/' ~ scan.filename) }}" alt="Scanned Crop Leaf" class="img-fluid rounded-4 shadow-sm border" style="max-height: 220px; object-fit: cover;">
+                <div class="mt-2">
+                    <span class="badge bg-secondary bg-opacity-75 rounded-pill px-3 py-1 small">
+                        {{ scan.crop_name }} ({{ scan.created_at[:10] if scan.created_at else 'आज' }})
+                    </span>
+                </div>
+            </div>
+
+            <div class="col-md-9">
+                <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+                    <span class="badge bg-{{ 'danger' if scan.severity == 'High' else ('warning text-dark' if scan.severity == 'Medium' else 'success') }} rounded-pill px-3 py-1">
+                        {{ scan.status }} • तीव्रता: {{ scan.severity }}
+                    </span>
+                    <span class="badge bg-light text-muted border rounded-pill px-3 py-1 small">
+                        <i class="bi bi-cpu me-1"></i> {{ scan.model_mode }}
+                    </span>
+                </div>
+
+                <h1 class="h3 fw-bold text-dark mb-1">
+                    {{ scan.summary_mr or scan.predicted_disease }}
+                </h1>
+                <div class="text-muted mb-3 font-monospace small">
+                    {{ scan.predicted_disease }}
+                </div>
+
+                <!-- Confidence Score Progress Bar -->
+                <div class="d-flex align-items-center gap-3 max-w-500 mb-3">
+                    <div class="small fw-bold text-muted">{{ t('confidence_score') }}:</div>
+                    <div class="progress flex-grow-1" style="height: 10px;">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: {{ scan.confidence }}%"></div>
+                    </div>
+                    <span class="fs-6 fw-bold text-success">{{ scan.confidence }}%</span>
+                </div>
+
+                <p class="text-dark mb-0">
+                    <strong>लक्षणे:</strong> {{ scan.summary_mr or scan.summary_en }}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Remedial & Advisory Sections -->
+    <div class="row g-4 mb-4">
+        
+        <!-- 1. Organic & Biological Solution (सेंद्रिय उपाय) -->
+        <div class="col-lg-6">
+            <div class="remedy-card organic h-100">
+                <div class="d-flex align-items-center gap-2 mb-3">
+                    <div class="brand-logo-icon bg-success text-white" style="width:36px; height:36px; font-size:1.1rem;">
+                        <i class="bi bi-tree"></i>
+                    </div>
+                    <h5 class="fw-bold mb-0 text-success">{{ t('organic_treatment') }}</h5>
+                </div>
+                <p class="text-dark mb-3">
+                    {{ scan.organic_remedy or "सेंद्रिय खते व जैविक बुरशीनाशकांचा (ट्रायकोडर्मा) नियमित वापर करावा." }}
+                </p>
+                <div class="small text-muted p-2 rounded bg-white bg-opacity-75 border">
+                    <i class="bi bi-check-circle-fill text-success me-1"></i> 
+                    सेंद्रिय उपाय पिकाची नैसर्गिक प्रतिकारशक्ती वाढवतात आणि जमिनीचा पोत सुधारतात.
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Certified Chemical Application (रासायनिक फवारणी) -->
+        <div class="col-lg-6">
+            <div class="remedy-card chemical h-100">
+                <div class="d-flex align-items-center gap-2 mb-3">
+                    <div class="brand-logo-icon bg-warning text-dark" style="width:36px; height:36px; font-size:1.1rem;">
+                        <i class="bi bi-eyedropper"></i>
+                    </div>
+                    <h5 class="fw-bold mb-0 text-dark">{{ t('chemical_treatment') }}</h5>
+                </div>
+                <p class="text-dark mb-3">
+                    {{ scan.chemical_remedy or "कोणत्याही रासायनिक औषधांची आवश्यकता नाही." }}
+                </p>
+                <div class="small text-muted p-2 rounded bg-white bg-opacity-75 border">
+                    <i class="bi bi-exclamation-triangle-fill text-warning me-1"></i> 
+                    महत्त्वाची सूचना: औषधांचे प्रमाण कृषी विद्यापीठाच्या शिफारशीनुसारच ठेवावे. संरक्षक मास्क वापरा.
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Preventive Cultural Practices (प्रतिबंधात्मक उपाय) -->
+        <div class="col-12">
+            <div class="remedy-card prevention">
+                <div class="d-flex align-items-center gap-2 mb-3">
+                    <div class="brand-logo-icon bg-primary text-white" style="width:36px; height:36px; font-size:1.1rem;">
+                        <i class="bi bi-shield-check"></i>
+                    </div>
+                    <h5 class="fw-bold mb-0 text-primary">{{ t('prevention_guidance') }}</h5>
+                </div>
+                <p class="text-dark mb-0">
+                    {{ scan.prevention_tip or "शेतातून पाण्याचा योग्य निचरा ठेवावा, दाट लागवड टाळावी व रोगट पाने गोळा करून नष्ट करावीत." }}
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Official Advisory Disclaimer for Seva Challenge -->
+    <div class="p-3 bg-light rounded-3 border text-muted small mb-4">
+        <i class="bi bi-info-circle me-1"></i>
+        <strong>सूचना (Advisory Disclaimer):</strong> हे विश्लेषण कोडकिसानच्या कॉम्प्युटर व्हिजन प्रोटोटाइप अल्गोरिदमवर आधारित आहे. शेतात मोठ्या प्रमाणात औषध फवारणीपूर्वी स्थानिक कृषी सहाय्यक किंवा कृषी विज्ञान केंद्राचा सल्ला घ्यावा.
+    </div>
+
+    <!-- Bottom Actions -->
+    <div class="d-flex flex-wrap justify-content-between gap-2">
+        <button onclick="window.print()" class="btn btn-outline-secondary">
+            <i class="bi bi-printer me-1"></i> अहवाल प्रिंट करा / Print Report
+        </button>
+        <div class="d-flex gap-2">
+            <a href="{{ url_for('disease.scan_page') }}" class="btn btn-kisaan-primary">
+                <i class="bi bi-camera me-1"></i> दुसरे पान तपासा
+            </a>
+            <a href="{{ url_for('weather.view_weather') }}" class="btn btn-outline-primary">
+                <i class="bi bi-cloud-sun me-1"></i> हवामान जोखीम तपासा
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

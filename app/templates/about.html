@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block title %}आमच्याबद्दल - {{ t('app_name') }} - Seva Innovation Challenge 2026{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="text-center max-w-700 mx-auto mb-5">
+        <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-2 fw-bold mb-2">
+            SEVA INNOVATION CHALLENGE 2026
+        </span>
+        <h1 class="display-6 fw-bold mb-3">कोडकिसान (CodeKisaan) प्रकल्प संकल्पना</h1>
+        <p class="text-muted fs-5">
+            ग्रामीण महाराष्ट्रातील अल्पभूधारक शेतकऱ्यांच्या हातात कृत्रिम बुद्धिमत्ता (AI) तंत्रज्ञान पोहोचवून पिकांचे नुकसान थांबवणे.
+        </p>
+    </div>
+
+    <!-- 3 Vision Cards -->
+    <div class="row g-4 mb-5">
+        <div class="col-lg-4">
+            <div class="kisaan-card p-4 h-100">
+                <div class="metric-icon-box bg-success bg-opacity-10 text-success mb-3">
+                    <i class="bi bi-bullseye"></i>
+                </div>
+                <h4 class="h5 fw-bold mb-2">आमचे ध्येय (Mission)</h4>
+                <p class="text-muted small mb-0">
+                    शेतकऱ्यांना महागड्या कीटकनाशकांच्या अनियंत्रित फवारणीपासून वाचवणे, रोगाचे अचूक वेळेवर निदान करणे आणि सेंद्रिय उपायांना प्राधान्य देणे.
+                </p>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="kisaan-card p-4 h-100">
+                <div class="metric-icon-box bg-warning bg-opacity-10 text-warning mb-3">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+                <h4 class="h5 fw-bold mb-2">लक्षित शेतकरी गट (Target Group)</h4>
+                <p class="text-muted small mb-0">
+                    विदर्भ, मराठवाडा व पश्चिम महाराष्ट्रातील १ ते ५ एकर शेती असलेले अल्पभूधारक शेतकरी, ज्यांना स्मार्ट फोनवर सोप्या भाषेत माहिती हवी आहे.
+                </p>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="kisaan-card p-4 h-100">
+                <div class="metric-icon-box bg-primary bg-opacity-10 text-primary mb-3">
+                    <i class="bi bi-cash-coin"></i>
+                </div>
+                <h4 class="h5 fw-bold mb-2">किफायतशीर तंत्रज्ञान (Affordability)</h4>
+                <p class="text-muted small mb-0">
+                    १००% ओपन-सोर्स साधनांवर (Python, Flask, Open-Meteo) विकसित केले असल्याने शेतकऱ्यांसाठी पूर्णतः विनामूल्य चालवणे शक्य आहे.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tech Stack & Hackathon Architecture -->
+    <div class="kisaan-card p-4 p-md-5 mb-5">
+        <h3 class="h4 fw-bold mb-4"><i class="bi bi-cpu-fill text-success me-2"></i>तांत्रिक संरचना (System Architecture)</h3>
+        
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="p-3 bg-light rounded-3 h-100 border">
+                    <h6 class="fw-bold text-dark mb-2"><i class="bi bi-code-slash text-primary me-1"></i> बॅकएंड व डेटाबेस (Backend & DB)</h6>
+                    <ul class="small text-muted mb-0 ps-3">
+                        <li><strong>Python 3.11 & Flask 3:</strong> जलद, सुरक्षित आणि हलकेफुलके WSGI वेब इंजिन.</li>
+                        <li><strong>SQLite (Relational):</strong> प्रोटोटाइपसाठी शून्य-कॉन्फिगरेशन डेटाबेस, भविष्यात MySQL/Postgres मध्ये सहज स्थलांतरित करता येणारा.</li>
+                        <li><strong>Modular Blueprints:</strong> स्वच्छता, चाचणी आणि देखभालीसाठी सुटसुटीत मॉड्युल्स.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="p-3 bg-light rounded-3 h-100 border">
+                    <h6 class="fw-bold text-dark mb-2"><i class="bi bi-eye-fill text-success me-1"></i> AI व संगणक दृष्टी (Computer Vision Pipeline)</h6>
+                    <ul class="small text-muted mb-0 ps-3">
+                        <li><strong>Pillow & NumPy Processing:</strong> पानाचे रिझोल्यूशन, फॉर्मेट आणि क्लोरोफिल स्पेक्ट्रम प्रमाणीकरण.</li>
+                        <li><strong>Botanical Heuristic & Model Hook:</strong> नेक्रोटिक डाग गुणोत्तर आणि बुरशी स्पोर वर्गीकरण.</li>
+                        <li><strong>Model Transparency:</strong> जजेससाठी प्रोटोटाइप आणि प्रोडक्शन डीप लर्निंग स्थितीचे स्पष्ट प्रदर्शन.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="p-3 bg-light rounded-3 h-100 border">
+                    <h6 class="fw-bold text-dark mb-2"><i class="bi bi-cloud-sun-fill text-warning me-1"></i> हवामान सेवा (Agro-Meteorology)</h6>
+                    <ul class="small text-muted mb-0 ps-3">
+                        <li><strong>Open-Meteo Weather API:</strong> विनामूल्य, उच्च-अचूकता हवामान डेटा (कोणत्याही API Key ची गरज नाही).</li>
+                        <li><strong>OpenWeatherMap Integration:</strong> .env द्वारे पर्यायी व्यावसायिक API जोडणी समर्थित.</li>
+                        <li><strong>Agro-Risk Engine:</strong> तापमान, आर्द्रता व वाऱ्याच्या वेगावरून थेट फवारणी सल्ला.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="p-3 bg-light rounded-3 h-100 border">
+                    <h6 class="fw-bold text-dark mb-2"><i class="bi bi-palette-fill text-danger me-1"></i> फ्रंटएंड व डिझाइन (UI / UX)</h6>
+                    <ul class="small text-muted mb-0 ps-3">
+                        <li><strong>Bootstrap 5 & Vanilla CSS Design System:</strong> कृषी-थीम रंगसंगती (Forest Green, Ochre, Sand).</li>
+                        <li><strong>Trilingual Engine:</strong> मराठी, हिंदी व इंग्रजी भाषेत सहज भाषांतर.</li>
+                        <li><strong>Chart.js Visuals:</strong> पिकांचे आरोग्य व हवामान कल दाखवणारे परस्परसंवादी आलेख.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Future Roadmap -->
+    <div class="p-4 rounded-4" style="background: linear-gradient(135deg, #f0fdf4, #e8f5e9); border: 1px solid #bbf7d0;">
+        <h4 class="h5 fw-bold text-success mb-3"><i class="bi bi-compass-fill me-2"></i>भविष्यातील विकास योजना (Future Roadmap)</h4>
+        <div class="row g-3 small text-dark">
+            <div class="col-md-4">
+                <strong>१. प्रादेशिक बोलीभाषा व्हॉईस असिस्टंट:</strong> ग्रामीण शेतकऱ्यांसाठी बोलून माहिती विचारण्याची सोय.
+            </div>
+            <div class="col-md-4">
+                <strong>२. ऑफलाइन मोबाईल ॲप (TFLite Edge):</strong> थेट शेतात इंटरनेट नसतानाही रोगाची तपासणी.
+            </div>
+            <div class="col-md-4">
+                <strong>३. उपग्रह NDVI पीक आरोग्य मॅपिंग:</strong> संपूर्ण शेतातील पिकाच्या वाढीची सॅटेलाइट द्वारे पाहणी.
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

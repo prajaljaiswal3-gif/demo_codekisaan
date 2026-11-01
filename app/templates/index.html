@@ -1,0 +1,218 @@
+{% extends "base.html" %}
+
+{% block title %}{{ t('app_name') }} - {{ t('hero_title') }}{% endblock %}
+
+{% block content %}
+<!-- Modern Agri-Tech Hero Section -->
+<section class="hero-section">
+    <div class="container position-relative">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-7">
+                <div class="hero-pill">
+                    <span class="pulse-dot green"></span>
+                    <span>{{ t('hero_badge') }}</span>
+                </div>
+                <h1 class="hero-title">
+                    {{ t('hero_title') }}
+                </h1>
+                <p class="hero-subtitle">
+                    {{ t('hero_subtitle') }}
+                </p>
+                <div class="d-flex flex-wrap gap-3 mb-4">
+                    <a href="{{ url_for('disease.scan_page') }}" class="btn btn-kisaan-primary fs-6 px-4 py-3">
+                        <i class="bi bi-camera-fill"></i>
+                        <span>{{ t('cta_scan_now') }}</span>
+                    </a>
+                    <a href="{{ url_for('dashboard.view_dashboard') }}" class="btn btn-kisaan-outline fs-6 px-4 py-3">
+                        <i class="bi bi-speedometer2"></i>
+                        <span>{{ t('cta_view_dashboard') }}</span>
+                    </a>
+                </div>
+                <div class="d-flex align-items-center gap-4 text-white-50 small pt-2">
+                    <div><i class="bi bi-shield-check text-success me-1 fs-5 align-middle"></i> १००% सुरक्षित व मोफत</div>
+                    <div><i class="bi bi-translate text-warning me-1 fs-5 align-middle"></i> मराठी • हिन्दी • English</div>
+                    <div><i class="bi bi-cpu text-info me-1 fs-5 align-middle"></i> Instant AI Diagnosis</div>
+                </div>
+            </div>
+
+            <!-- Hero Image Visual Card -->
+            <div class="col-lg-5">
+                <div class="hero-img-card">
+                    <img src="{{ url_for('static', filename='img/hero_banner.jpg') }}" alt="CodeKisaan Smart Farming in Maharashtra" class="img-fluid">
+                    <div class="hero-floating-stat">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-cloud-sun text-warning fs-3"></i>
+                            <div>
+                                <div class="text-white-50 small" style="font-size:0.75rem;">हवामान अंदाज (Live Weather)</div>
+                                <div class="text-white fw-bold">पुणे जिल्हा • २८°C</div>
+                            </div>
+                        </div>
+                        <span class="badge bg-success bg-opacity-75 rounded-pill px-3 py-2 small">
+                            <i class="bi bi-check-circle me-1"></i> फवारणीस अनुकूल
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Impact Metrics Strip -->
+<section class="py-4 bg-white border-bottom">
+    <div class="container">
+        <div class="row g-3 text-center">
+            <div class="col-6 col-md-3">
+                <div class="p-2">
+                    <div class="brand-font fs-2 fw-bold text-success">५+</div>
+                    <div class="small text-muted">प्रमुख पिकांचे मॉडेल (Cotton, Soybean, etc.)</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="p-2">
+                    <div class="brand-font fs-2 fw-bold text-success">&lt; २ सेकंद</div>
+                    <div class="small text-muted">रोग निदान वेग (Inference Speed)</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="p-2">
+                    <div class="brand-font fs-2 fw-bold text-success">३ भाषा</div>
+                    <div class="small text-muted">स्थानिक भाषा सुलभता (मराठी, हिंदी, इंग्रजी)</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="p-2">
+                    <div class="brand-font fs-2 fw-bold text-success">१० जिल्हे</div>
+                    <div class="small text-muted">थेट कृषी हवामान इशारे (Live Agro-Risks)</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Core Features Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center max-w-700 mx-auto mb-5">
+            <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-2 fw-bold mb-2">
+                स्मार्ट शेती तंत्रज्ञान / SMART AGRI SUITE
+            </span>
+            <h2 class="display-6 fw-bold mb-3">शेतकऱ्यांसाठी कोडकिसान कसे कार्य करते?</h2>
+            <p class="text-muted">
+                ग्रामीण भागातील अल्पभूधारक शेतकऱ्यांचा खर्च कमी करून उत्पादन वाढवण्यासाठी एकात्मिक कृषी सहाय्यक व्यासपीठ.
+            </p>
+        </div>
+
+        <div class="row g-4">
+            <!-- Feature Card 1: AI Leaf Doctor -->
+            <div class="col-lg-4 col-md-6">
+                <div class="kisaan-card h-100 p-4">
+                    <div class="metric-icon-box bg-success bg-opacity-10 text-success mb-3">
+                        <i class="bi bi-camera"></i>
+                    </div>
+                    <h4 class="h5 fw-bold mb-2">AI पीक रोग निदान (Crop Doctor)</h4>
+                    <p class="text-muted small mb-4">
+                        बाधित पानाचा फोटो अपलोड करा. आमचे कॉम्प्युटर व्हिजन अल्गोरिदम तांबेरा, करपा, बोंडअळी नुकसान ओळखून त्वरित उपचार सुचवतो.
+                    </p>
+                    <a href="{{ url_for('disease.scan_page') }}" class="text-success fw-bold text-decoration-none small stretched-link">
+                        पान तपासा <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Feature Card 2: Agro Weather & Spray Advisory -->
+            <div class="col-lg-4 col-md-6">
+                <div class="kisaan-card h-100 p-4">
+                    <div class="metric-icon-box bg-info bg-opacity-10 text-primary mb-3">
+                        <i class="bi bi-cloud-rain"></i>
+                    </div>
+                    <h4 class="h5 fw-bold mb-2">हवामान व बुरशी जोखीम अंदाज</h4>
+                    <p class="text-muted small mb-4">
+                        वातावरणातील आर्द्रता व तापमानाचा अभ्यास करून बुरशीचा धोका आधीच ओळखतो. फवारणी करावी की नाही याचे शास्त्रोक्त मार्गदर्शन.
+                    </p>
+                    <a href="{{ url_for('weather.view_weather') }}" class="text-primary fw-bold text-decoration-none small stretched-link">
+                        हवामान जोखीम पहा <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Feature Card 3: Organic & Chemical Guidance -->
+            <div class="col-lg-4 col-md-6">
+                <div class="kisaan-card h-100 p-4">
+                    <div class="metric-icon-box bg-warning bg-opacity-10 text-warning mb-3">
+                        <i class="bi bi-shield-shaded"></i>
+                    </div>
+                    <h4 class="h5 fw-bold mb-2">सेंद्रिय व वैज्ञानिक उपाययोजना</h4>
+                    <p class="text-muted small mb-4">
+                        कमी खर्चाचे कडुनिंब अर्क, दशपर्णी अर्क, ट्रायकोडर्मा उपाय आणि गंभीर अवस्थेत तज्ञांनी शिफारस केलेली नियंत्रित औषधे व प्रमाण.
+                    </p>
+                    <a href="{{ url_for('advisory.view_advisory') }}" class="text-warning fw-bold text-decoration-none small stretched-link">
+                        मार्गदर्शन ग्रंथालय <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Feature Card 4: Farmer Dashboard -->
+            <div class="col-lg-4 col-md-6">
+                <div class="kisaan-card h-100 p-4">
+                    <div class="metric-icon-box bg-primary bg-opacity-10 text-primary mb-3">
+                        <i class="bi bi-graph-up-arrow"></i>
+                    </div>
+                    <h4 class="h5 fw-bold mb-2">शेतकरी विश्लेषण डॅशबोर्ड</h4>
+                    <p class="text-muted small mb-4">
+                        मागील तपासणी इतिहास, पिकाचे आरोग्य निर्देशांक आणि हवामान बदलांचा आलेख एकाच ठिकाणी पाहण्याची सोय.
+                    </p>
+                    <a href="{{ url_for('dashboard.view_dashboard') }}" class="text-primary fw-bold text-decoration-none small stretched-link">
+                        डॅशबोर्ड पहा <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Feature Card 5: Trilingual Accessibility -->
+            <div class="col-lg-4 col-md-6">
+                <div class="kisaan-card h-100 p-4">
+                    <div class="metric-icon-box bg-danger bg-opacity-10 text-danger mb-3">
+                        <i class="bi bi-translate"></i>
+                    </div>
+                    <h4 class="h5 fw-bold mb-2">मराठी, हिंदी व इंग्रजी भाषा</h4>
+                    <p class="text-muted small mb-4">
+                        तांत्रिक शब्द न वापरता ग्रामीण शेतकऱ्याला सहज समजणाऱ्या बोलीभाषेत सल्ला. एका क्लिकवर भाषा बदलण्याची सुविधा.
+                    </p>
+                    <div class="small fw-semibold text-danger">स्थानिक शेतकऱ्यांसाठी सुलभ</div>
+                </div>
+            </div>
+
+            <!-- Feature Card 6: Free & Lightweight -->
+            <div class="col-lg-4 col-md-6">
+                <div class="kisaan-card h-100 p-4">
+                    <div class="metric-icon-box bg-secondary bg-opacity-10 text-secondary mb-3">
+                        <i class="bi bi-phone"></i>
+                    </div>
+                    <h4 class="h5 fw-bold mb-2">कमी डेटा व जलद लोड होणारे</h4>
+                    <p class="text-muted small mb-4">
+                        ग्रामीण भागातील कमकुवत २G/३G नेटवर्कवरही विनाविलंब चालणारे हलकेफुलके आणि प्रतिसादक्षम वेब ॲप.
+                    </p>
+                    <div class="small fw-semibold text-secondary">Zero-Lag Architecture</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action Banner -->
+<section class="py-5" style="background: linear-gradient(135deg, #1b4d3e, #0e2b1d); color: #fff;">
+    <div class="container text-center py-4">
+        <h2 class="display-6 fw-bold mb-3 text-white">तुमच्या शेतातील पिकांचे आरोग्य आजच तपासा</h2>
+        <p class="fs-5 text-light mb-4 max-w-700 mx-auto">
+            कोणतीही फी किंवा किचकट नोंदणी नाही. फक्त पानाचा फोटो काढून रोगनिदान सुरू करा.
+        </p>
+        <div class="d-flex justify-content-center gap-3">
+            <a href="{{ url_for('disease.scan_page') }}" class="btn btn-warning btn-lg fw-bold px-4 py-3 text-dark">
+                <i class="bi bi-camera-fill me-2"></i> {{ t('cta_scan_now') }}
+            </a>
+            <a href="{{ url_for('weather.view_weather') }}" class="btn btn-outline-light btn-lg px-4 py-3">
+                <i class="bi bi-cloud-sun me-2"></i> {{ t('nav_weather') }}
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

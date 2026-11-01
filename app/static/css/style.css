@@ -1,0 +1,514 @@
+/* ==========================================================================
+   CodeKisaan (कोडकिसान) - Custom Agri-Tech Design System
+   Seva Innovation Challenge 2026
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+  --kisaan-deep: #0f2d1e;
+  --kisaan-emerald: #1b4d3e;
+  --kisaan-leaf: #2e7d56;
+  --kisaan-fresh: #40916c;
+  --kisaan-sage: #74c69d;
+  --kisaan-mint: #d8f3dc;
+  --kisaan-sand: #fefae0;
+  --kisaan-amber: #e76f51;
+  --kisaan-ochre: #e9c46a;
+  --kisaan-bg: #f8faf8;
+  --kisaan-card: #ffffff;
+  --kisaan-text: #1a2e22;
+  --kisaan-text-muted: #537162;
+  --kisaan-border: #e2ece6;
+  --kisaan-shadow-sm: 0 2px 8px rgba(15, 45, 30, 0.05);
+  --kisaan-shadow-md: 0 8px 24px rgba(15, 45, 30, 0.08);
+  --kisaan-shadow-lg: 0 16px 36px rgba(15, 45, 30, 0.12);
+  --kisaan-radius: 14px;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: var(--kisaan-bg);
+  color: var(--kisaan-text);
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+h1, h2, h3, h4, h5, h6, .brand-font {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  color: var(--kisaan-deep);
+  letter-spacing: -0.02em;
+}
+
+/* ==========================================================================
+   Navigation Bar
+   ========================================================================== */
+.navbar-kisaan {
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--kisaan-border);
+  box-shadow: var(--kisaan-shadow-sm);
+  padding: 0.8rem 0;
+  transition: all 0.3s ease;
+}
+
+.brand-logo-icon {
+  width: 42px;
+  height: 42px;
+  background: linear-gradient(135deg, var(--kisaan-leaf), var(--kisaan-fresh));
+  color: #fff;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  box-shadow: 0 4px 12px rgba(46, 125, 86, 0.25);
+}
+
+.brand-text-main {
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: var(--kisaan-deep);
+  line-height: 1;
+}
+
+.brand-text-badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--kisaan-leaf);
+  letter-spacing: 0.05em;
+}
+
+.nav-link-kisaan {
+  color: var(--kisaan-text);
+  font-weight: 500;
+  font-size: 0.95rem;
+  padding: 0.5rem 0.9rem !important;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.nav-link-kisaan:hover, .nav-link-kisaan.active {
+  color: var(--kisaan-leaf) !important;
+  background-color: var(--kisaan-mint);
+}
+
+/* Language Selector Pills */
+.lang-selector-group {
+  background: #f0f7f2;
+  border: 1px solid var(--kisaan-border);
+  border-radius: 30px;
+  padding: 2px;
+  display: inline-flex;
+}
+
+.lang-btn {
+  border: none;
+  background: transparent;
+  padding: 4px 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-radius: 20px;
+  color: var(--kisaan-text-muted);
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.lang-btn.active {
+  background: var(--kisaan-leaf);
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(46, 125, 86, 0.3);
+}
+
+/* ==========================================================================
+   Hero Section
+   ========================================================================== */
+.hero-section {
+  position: relative;
+  background: linear-gradient(135deg, #0e2b1d 0%, #17422d 60%, #1f563b 100%);
+  color: #ffffff;
+  padding: 4.5rem 0 3.5rem;
+  overflow: hidden;
+}
+
+.hero-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: radial-gradient(circle at 20% 30%, rgba(116, 198, 157, 0.15) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 70%, rgba(231, 111, 81, 0.1) 0%, transparent 40%);
+  pointer-events: none;
+}
+
+.hero-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: var(--kisaan-mint);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.4rem 1rem;
+  border-radius: 30px;
+  backdrop-filter: blur(8px);
+  margin-bottom: 1.25rem;
+}
+
+.hero-title {
+  color: #ffffff;
+  font-size: 2.85rem;
+  line-height: 1.15;
+  margin-bottom: 1.2rem;
+}
+
+.hero-subtitle {
+  color: #d1e7dd;
+  font-size: 1.15rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  max-width: 580px;
+}
+
+.hero-img-card {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+  border: 3px solid rgba(255, 255, 255, 0.15);
+}
+
+.hero-img-card img {
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: transform 0.6s ease;
+}
+
+.hero-img-card:hover img {
+  transform: scale(1.02);
+}
+
+.hero-floating-stat {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  right: 16px;
+  background: rgba(15, 45, 30, 0.88);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 12px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* ==========================================================================
+   Buttons & Micro-Interactions
+   ========================================================================== */
+.btn-kisaan-primary {
+  background: linear-gradient(135deg, #2e7d56, #236846);
+  color: #ffffff;
+  font-weight: 600;
+  padding: 0.75rem 1.6rem;
+  border-radius: 10px;
+  border: none;
+  box-shadow: 0 4px 14px rgba(46, 125, 86, 0.3);
+  transition: all 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-kisaan-primary:hover {
+  background: linear-gradient(135deg, #256a48, #1b5336);
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(46, 125, 86, 0.4);
+}
+
+.btn-kisaan-outline {
+  background: transparent;
+  color: #ffffff;
+  font-weight: 600;
+  padding: 0.75rem 1.6rem;
+  border-radius: 10px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  transition: all 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-kisaan-outline:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  border-color: #ffffff;
+  transform: translateY(-2px);
+}
+
+/* ==========================================================================
+   Cards & Surfaces
+   ========================================================================== */
+.kisaan-card {
+  background: var(--kisaan-card);
+  border: 1px solid var(--kisaan-border);
+  border-radius: var(--kisaan-radius);
+  box-shadow: var(--kisaan-shadow-sm);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  overflow: hidden;
+}
+
+.kisaan-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--kisaan-shadow-md);
+}
+
+.kisaan-card-header {
+  padding: 1.25rem 1.5rem;
+  background: #ffffff;
+  border-bottom: 1px solid var(--kisaan-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.kisaan-card-body {
+  padding: 1.5rem;
+}
+
+/* Stat Metric Cards */
+.metric-card {
+  padding: 1.4rem;
+  border-radius: var(--kisaan-radius);
+  background: #ffffff;
+  border: 1px solid var(--kisaan-border);
+  box-shadow: var(--kisaan-shadow-sm);
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.metric-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+}
+
+.metric-card.accent-green::after { background: var(--kisaan-leaf); }
+.metric-card.accent-amber::after { background: var(--kisaan-amber); }
+.metric-card.accent-blue::after { background: #3a86ff; }
+.metric-card.accent-ochre::after { background: var(--kisaan-ochre); }
+
+.metric-icon-box {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+.metric-val {
+  font-size: 1.85rem;
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--kisaan-deep);
+}
+
+.metric-lbl {
+  font-size: 0.85rem;
+  color: var(--kisaan-text-muted);
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+/* ==========================================================================
+   Leaf Scan Upload Dropzone
+   ========================================================================== */
+.dropzone-box {
+  border: 2px dashed #95d5b2;
+  border-radius: 16px;
+  background: #f4faf6;
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  position: relative;
+}
+
+.dropzone-box:hover, .dropzone-box.dragover {
+  border-color: var(--kisaan-leaf);
+  background: #e8f5ed;
+}
+
+.dropzone-icon {
+  font-size: 3rem;
+  color: var(--kisaan-fresh);
+  margin-bottom: 0.75rem;
+  transition: transform 0.3s ease;
+}
+
+.dropzone-box:hover .dropzone-icon {
+  transform: scale(1.1);
+}
+
+.preview-container {
+  display: none;
+  margin-top: 1.25rem;
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  max-height: 280px;
+}
+
+.preview-container img {
+  width: 100%;
+  max-height: 280px;
+  object-fit: contain;
+  border-radius: 12px;
+  border: 1px solid var(--kisaan-border);
+}
+
+/* Sample Leaf Clickers */
+.sample-leaf-chip {
+  cursor: pointer;
+  border: 1px solid var(--kisaan-border);
+  border-radius: 10px;
+  padding: 0.4rem 0.8rem;
+  background: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--kisaan-deep);
+  transition: all 0.2s ease;
+}
+
+.sample-leaf-chip:hover {
+  background: var(--kisaan-mint);
+  border-color: var(--kisaan-leaf);
+  transform: translateY(-1px);
+}
+
+.sample-leaf-chip img {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+/* ==========================================================================
+   Remedy and Guidance Badges
+   ========================================================================== */
+.remedy-card {
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  border: 1px solid transparent;
+}
+
+.remedy-card.organic {
+  background: #f1f8f3;
+  border-color: #c7e8d3;
+}
+
+.remedy-card.chemical {
+  background: #fff8f0;
+  border-color: #fed9b7;
+}
+
+.remedy-card.prevention {
+  background: #f0f7fb;
+  border-color: #bde0fe;
+}
+
+.badge-model-mode {
+  font-size: 0.78rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 30px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+/* ==========================================================================
+   Pulse & Live Indicators
+   ========================================================================== */
+.pulse-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+}
+
+.pulse-dot.green {
+  background: #2ec4b6;
+}
+
+.pulse-dot.green::after {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border-radius: 50%;
+  border: 2px solid #2ec4b6;
+  animation: pulse-ring 1.8s infinite;
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.9); opacity: 0.8; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+/* Footer */
+.footer-kisaan {
+  background: #0b2015;
+  color: #c9dbd1;
+  padding: 3rem 0 1.5rem;
+  margin-top: auto;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.footer-link {
+  color: #a3c2b1;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.2s ease;
+}
+
+.footer-link:hover {
+  color: #ffffff;
+}
+
+/* Responsive adjust */
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 2.1rem;
+  }
+  .hero-section {
+    padding: 3rem 0 2.5rem;
+  }
+  .metric-val {
+    font-size: 1.5rem;
+  }
+}

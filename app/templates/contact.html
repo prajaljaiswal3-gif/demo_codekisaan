@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}{{ t('nav_contact') }} - {{ t('app_name') }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Header -->
+    <div class="text-center max-w-700 mx-auto mb-4">
+        <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-2 fw-bold mb-2">
+            <i class="bi bi-headset me-1"></i> FARMER HELPDESK • शेतकरी सहाय्यता
+        </span>
+        <h1 class="display-6 fw-bold mb-2">{{ t('nav_contact') }}</h1>
+        <p class="text-muted">
+            शेतीसंबंधी कोणतीही अडचण, पीक रोगाविषयी प्रश्न अथवा कोडकिसान ॲपविषयी अभिप्राय पाठवण्यासाठी हा फॉर्म भरा.
+        </p>
+    </div>
+
+    <div class="row g-4 justify-content-center">
+        <!-- Form Column -->
+        <div class="col-lg-7">
+            <div class="kisaan-card p-4 p-md-5">
+                <form action="{{ url_for('main.submit_feedback') }}" method="POST">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="farmerName" class="form-label fw-bold small text-dark">शेतकऱ्याचे नाव (Farmer Name) *</label>
+                            <input type="text" class="form-control rounded-3" id="farmerName" name="farmer_name" placeholder="उदा. पांडुरंग पाटील" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="contactNumber" class="form-label fw-bold small text-dark">मोबाईल नंबर (Contact No.)</label>
+                            <input type="tel" class="form-control rounded-3" id="contactNumber" name="contact_number" placeholder="उदा. 98XXXXXXXX">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="district" class="form-label fw-bold small text-dark">जिल्हा (District) *</label>
+                            <select class="form-select rounded-3" id="district" name="district" required>
+                                <option value="Pune" selected>पुणे (Pune)</option>
+                                <option value="Nashik">नाशिक (Nashik)</option>
+                                <option value="Nagpur">नागपूर (Nagpur)</option>
+                                <option value="Solapur">सोलापूर (Solapur)</option>
+                                <option value="Chhatrapati Sambhaji Nagar">छत्रपती संभाजीनगर</option>
+                                <option value="Kolhapur">कोल्हापूर (Kolhapur)</option>
+                                <option value="Amravati">अमरावती (Amravati)</option>
+                                <option value="Jalgaon">जळगाव (Jalgaon)</option>
+                                <option value="Nanded">नांदेड (Nanded)</option>
+                                <option value="Ahmednagar">अहमदनगर (Ahmednagar)</option>
+                                <option value="Other">इतर (Other District)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="cropType" class="form-label fw-bold small text-dark">पिकाचे नाव (Crop Type)</label>
+                            <input type="text" class="form-control rounded-3" id="cropType" name="crop_type" placeholder="उदा. कापूस, सोयाबीन, इ.">
+                        </div>
+                        <div class="col-12">
+                            <label for="message" class="form-label fw-bold small text-dark">तुमचा प्रश्न अथवा संदेश (Your Query / Feedback) *</label>
+                            <textarea class="form-control rounded-3" id="message" name="message" rows="4" placeholder="तुमच्या शेतातील लक्षणे किंवा समस्या येथे लिहा..." required></textarea>
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-kisaan-primary w-100 py-3 fw-bold">
+                                <i class="bi bi-send-fill me-2"></i> संदेश पाठवा (Submit Inquiry)
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Official Helplines Info Column -->
+        <div class="col-lg-5">
+            <div class="kisaan-card p-4 h-100 bg-white">
+                <h5 class="fw-bold mb-3 text-dark">
+                    <i class="bi bi-telephone-inbound-fill text-success me-2"></i>
+                    महत्त्वाचे शासकीय संपर्क क्रमांक
+                </h5>
+
+                <div class="p-3 rounded-3 bg-light border mb-3">
+                    <div class="small fw-bold text-success">राष्ट्रीय किसान कॉल सेंटर (Kisan Call Center)</div>
+                    <div class="fs-5 fw-bold text-dark my-1">
+                        <i class="bi bi-telephone-fill text-warning me-1"></i> 1800-180-1551
+                    </div>
+                    <div class="small text-muted">सर्व दिवस सकाळी ६:०० ते रात्री १०:०० (मराठीत उपलब्ध)</div>
+                </div>
+
+                <div class="p-3 rounded-3 bg-light border mb-3">
+                    <div class="small fw-bold text-primary">महाराष्ट्र कृषी विभाग नियंत्रण कक्ष</div>
+                    <div class="fs-6 fw-bold text-dark my-1">
+                        <i class="bi bi-telephone text-primary me-1"></i> 1800-233-4000
+                    </div>
+                    <div class="small text-muted">योजना व खते-बियाणे तक्रारींसाठी टोल-फ्री</div>
+                </div>
+
+                <div class="p-3 rounded-3 bg-light border">
+                    <div class="small fw-bold text-dark">हवामान व नैसर्गिक आपत्ती मदत</div>
+                    <div class="small text-muted mt-1">
+                        नजीकच्या कृषी विज्ञान केंद्राशी (KVK) संपर्क साधण्यासाठी आपले स्थानिक तालुका कृषी अधिकारी कार्यालय गाठा.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

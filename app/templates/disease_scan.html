@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+
+{% block title %}{{ t('disease_upload_title') }} - {{ t('app_name') }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Header Title -->
+    <div class="text-center max-w-700 mx-auto mb-4">
+        <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-2 fw-bold mb-2">
+            <i class="bi bi-cpu-fill me-1"></i> AI CROP DOCTOR • कृत्रिम बुद्धिमत्ता पीक डॉक्टर
+        </span>
+        <h1 class="display-6 fw-bold mb-2">{{ t('disease_upload_title') }}</h1>
+        <p class="text-muted">
+            {{ t('disease_upload_desc') }}
+        </p>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="kisaan-card p-4 p-md-5">
+                <!-- AI Engine Transparency Badge for Judges -->
+                <div class="alert alert-info border-0 rounded-3 d-flex align-items-center gap-3 mb-4" style="background: #eef7f2;">
+                    <i class="bi bi-shield-check text-success fs-3"></i>
+                    <div class="small">
+                        <strong>पारदर्शक AI प्रणाली (Transparent ML Pipeline):</strong> 
+                        हे मॉडेल पानाचे क्लोरोफिल प्रमाण, डागांचा आकार व नेक्रोटिक पॅटर्न तपासून रोगाचे अचूक वर्गीकरण करते.
+                    </div>
+                </div>
+
+                <!-- Leaf Upload Form -->
+                <form id="leafScanForm" action="{{ url_for('disease.analyze_scan') }}" method="POST" enctype="multipart/form-data">
+                    
+                    <!-- Crop Type Selector -->
+                    <div class="mb-4">
+                        <label for="cropSelect" class="form-label fw-bold text-dark">
+                            <i class="bi bi-flower2 text-success me-1"></i> {{ t('select_crop_label') }}
+                        </label>
+                        <select class="form-select form-select-lg rounded-3" id="cropSelect" name="crop_name">
+                            <option value="Cotton" selected>कपाशी (Cotton / कापूस)</option>
+                            <option value="Soybean">सोयाबीन (Soybean)</option>
+                            <option value="Tomato">टोमॅटो (Tomato)</option>
+                            <option value="Rice">भात / धान (Rice / Paddy)</option>
+                            <option value="Sugarcane">ऊस (Sugarcane)</option>
+                        </select>
+                        <div class="form-text text-muted small">
+                            पिकाचा अचूक प्रकार निवडल्यास AI रोगनिदान अधिक अचूक व जलद होते.
+                        </div>
+                    </div>
+
+                    <!-- Hidden input if sample leaf was clicked -->
+                    <input type="hidden" id="sampleImageName" name="sample_image_name" value="">
+
+                    <!-- Drag & Drop Upload Zone -->
+                    <div class="mb-4">
+                        <label class="form-label fw-bold text-dark">
+                            <i class="bi bi-image text-success me-1"></i> {{ t('choose_file_label') }}
+                        </label>
+                        
+                        <div class="dropzone-box" id="leafDropzone">
+                            <i class="bi bi-cloud-arrow-up dropzone-icon"></i>
+                            <h5 class="fw-bold mb-1">पानाचा फोटो येथे ओढा किंवा क्लिक करा</h5>
+                            <p class="text-muted small mb-2">Drag & drop infected leaf photo or click to browse</p>
+                            <span class="badge bg-white text-muted border px-3 py-2 rounded-pill small">
+                                JPG, PNG, WEBP (Max 5MB)
+                            </span>
+                            <input type="file" id="leafFileInput" name="leaf_image" accept="image/png, image/jpeg, image/webp" class="d-none">
+                        </div>
+
+                        <!-- Image Preview Box -->
+                        <div class="preview-container text-center" id="previewContainer">
+                            <div class="small text-muted mb-2">निवडलेला फोटो (Selected Preview):</div>
+                            <img id="previewImage" src="#" alt="Selected Leaf Preview" class="img-fluid shadow-sm">
+                        </div>
+                    </div>
+
+                    <!-- Quick Sample Testing Chips for Judges & Demo -->
+                    <div class="mb-4 pt-2 border-top">
+                        <div class="small fw-bold text-muted mb-2">
+                            <i class="bi bi-stars text-warning me-1"></i> त्वरित चाचणीसाठी नमुने (Quick Demo Samples for Judges):
+                        </div>
+                        <div class="d-flex flex-wrap gap-2">
+                            <div class="sample-leaf-chip" data-sample="sample_cotton_leaf.jpg" data-crop="Cotton" data-src="{{ url_for('static', filename='img/samples/sample_cotton_leaf.jpg') }}">
+                                <img src="{{ url_for('static', filename='img/samples/sample_cotton_leaf.jpg') }}" alt="Cotton Blight">
+                                <span>कापूस करपा (Cotton Blight)</span>
+                                <i class="bi bi-arrow-right-short text-success"></i>
+                            </div>
+                            <div class="sample-leaf-chip" data-sample="sample_soybean_leaf.jpg" data-crop="Soybean" data-src="{{ url_for('static', filename='img/samples/sample_soybean_leaf.jpg') }}">
+                                <img src="{{ url_for('static', filename='img/samples/sample_soybean_leaf.jpg') }}" alt="Soybean Healthy">
+                                <span>निरोगी सोयाबीन (Healthy Soybean)</span>
+                                <i class="bi bi-arrow-right-short text-success"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Animated AI Processing Progress Bar -->
+                    <div id="scanProgressBar" class="mb-4" style="display: none;">
+                        <div class="d-flex justify-content-between small text-muted mb-1">
+                            <span id="scanStatusText">विश्लेषण सुरू आहे... / Inspecting leaf...</span>
+                            <span class="spinner-grow spinner-grow-sm text-success" role="status"></span>
+                        </div>
+                        <div class="progress" style="height: 10px;">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" style="width: 25%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="d-grid">
+                        <button type="submit" id="btnDiagnose" class="btn btn-kisaan-primary btn-lg py-3 fw-bold" disabled>
+                            <i class="bi bi-magic me-2"></i> {{ t('btn_diagnose') }}
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+
+            <!-- Helpful Photography Guidelines for Farmers -->
+            <div class="row g-3 mt-3">
+                <div class="col-md-4">
+                    <div class="p-3 bg-white rounded-3 border h-100 small">
+                        <i class="bi bi-sun-fill text-warning fs-5 d-block mb-1"></i>
+                        <strong>चांगला प्रकाश वापरा:</strong> थेट उन्हात अथवा स्वच्छ प्रकाशात पानावरील डाग स्पष्ट दिसतील असा फोटो काढा.
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3 bg-white rounded-3 border h-100 small">
+                        <i class="bi bi-aspect-ratio text-primary fs-5 d-block mb-1"></i>
+                        <strong>जवळून फोटो घ्या:</strong> संपूर्ण झाडाऐवजी रोगट पानाच्या भागावर कॅमेरा स्थिर ठेवून फोकस करा.
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3 bg-white rounded-3 border h-100 small">
+                        <i class="bi bi-hand-thumbs-up text-success fs-5 d-block mb-1"></i>
+                        <strong>पानाचा मागचा भाग:</strong> तांबेरा किंवा बुरशीच्या लक्षणांसाठी पानाचा मागचा भागही तपासा.
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
