@@ -72,6 +72,10 @@ function initLeafUploader() {
             return;
         }
 
+        // Clear any previous sample selection so uploaded file takes precedence
+        const sampleInput = document.getElementById("sampleImageName");
+        if (sampleInput) sampleInput.value = "";
+
         // Preview
         const reader = new FileReader();
         reader.onload = (e) => {
@@ -127,6 +131,7 @@ function initSampleChips() {
     const btnDiagnose = document.getElementById("btnDiagnose");
     const sampleInput = document.getElementById("sampleImageName");
     const cropSelect = document.getElementById("cropSelect");
+    const fileInput = document.getElementById("leafFileInput");
 
     chips.forEach(chip => {
         chip.addEventListener("click", () => {
@@ -136,6 +141,7 @@ function initSampleChips() {
 
             if (sampleInput) sampleInput.value = sampleName;
             if (cropSelect && cropType) cropSelect.value = cropType;
+            if (fileInput) fileInput.value = ""; // Clear file input when sample is chosen
 
             if (previewImage && previewContainer) {
                 previewImage.src = imgPath;

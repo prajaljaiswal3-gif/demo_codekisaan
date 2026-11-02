@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, session, request
+from flask import Flask, render_template, session, request, send_from_directory, abort
 from app.config import Config
 from app.database import init_db
 from app.services.translation import get_text
@@ -10,6 +10,23 @@ def create_app(config_class=Config):
 
     # Initialize SQLite database and seed data
     init_db()
+
+    # Serve uploaded images smoothly across both local and Vercel serverless environments
+    @app.route("/static/uploads/<path:filename>")
+    def serve_upload(filename):
+        # 1. Check primary upload folder (e.g., /tmp/uploads on Vercel or app/static/uploads locally)
+        target = Config.UPLOAD_FOLDER / filename
+        if target.exists():
+            return send_from_directory(Config.UPLOAD_FOLDER, filename)
+        # 2. Check bundled static uploads
+        bundled_uploads = Config.BASE_DIR / "app" / "static" / "uploads"
+        if (bundled_uploads / filename).exists():
+            return send_from_directory(bundled_uploads, filename)
+        # 3. Check bundled sample images
+        bundled_samples = Config.BASE_DIR / "app" / "static" / "img" / "samples"
+        if (bundled_samples / filename).exists():
+            return send_from_directory(bundled_samples, filename)
+        abort(404)
 
     # Context Processor for Trilingual Translation Engine
     @app.context_processor
@@ -35,7 +52,7 @@ def create_app(config_class=Config):
     # Robust Custom Error Handlers
     @app.errorhandler(404)
     def page_not_found(e):
-        return render_template("base.html", active_page=""), 404
+        return render_template("404.html", active_page=""), 404
 
     @app.errorhandler(413)
     def request_entity_too_large(e):

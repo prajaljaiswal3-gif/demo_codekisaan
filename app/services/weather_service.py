@@ -69,14 +69,23 @@ def _fetch_open_meteo(lat, lon, district_name):
     resp.raise_for_status()
     data = resp.json()
 
-    curr = data.get("current", {})
-    daily = data.get("daily", {})
+    curr = data.get("current") or {}
+    daily = data.get("daily") or {}
 
-    temp = round(curr.get("temperature_2m", 28.0), 1)
-    humidity = round(curr.get("relative_humidity_2m", 60.0), 1)
-    wind_speed = round(curr.get("wind_speed_10m", 8.0), 1)
-    precip = round(curr.get("precipitation", 0.0), 1)
-    w_code = curr.get("weather_code", 0)
+    t_val = curr.get("temperature_2m")
+    temp = round(float(t_val if t_val is not None else 28.0), 1)
+
+    h_val = curr.get("relative_humidity_2m")
+    humidity = round(float(h_val if h_val is not None else 60.0), 1)
+
+    w_val = curr.get("wind_speed_10m")
+    wind_speed = round(float(w_val if w_val is not None else 8.0), 1)
+
+    p_val = curr.get("precipitation")
+    precip = round(float(p_val if p_val is not None else 0.0), 1)
+
+    w_code = curr.get("weather_code")
+    w_code = int(w_code) if w_code is not None else 0
 
     weather_desc_en, weather_desc_hi, weather_desc_mr, icon_class = WMO_CODES.get(
         w_code, ("Fair", "सामान्य", "सामान्य", "bi-sun-fill text-warning")
@@ -85,17 +94,29 @@ def _fetch_open_meteo(lat, lon, district_name):
     # Calculate Agricultural Advisory Risk Metrics
     risk_assessment = _calculate_crop_risk(temp, humidity, precip, wind_speed)
 
-    # 3-day forecast summary
+    # Extended forecast summary
     forecast = []
-    if "time" in daily and len(daily["time"]) >= 3:
-        for i in range(min(4, len(daily["time"]))):
-            day_wcode = daily.get("weather_code", [0])[i]
+    daily_times = daily.get("time") or []
+    if len(daily_times) >= 3:
+        num_days = min(4, len(daily_times))
+        wcode_list = daily.get("weather_code") or []
+        tmax_list = daily.get("temperature_2m_max") or []
+        tmin_list = daily.get("temperature_2m_min") or []
+        prec_list = daily.get("precipitation_sum") or []
+
+        for i in range(num_days):
+            day_wcode = wcode_list[i] if i < len(wcode_list) and wcode_list[i] is not None else 0
             day_desc_en, _, day_desc_mr, day_icon = WMO_CODES.get(day_wcode, ("Fair", "", "", "bi-sun"))
+
+            tmax = tmax_list[i] if i < len(tmax_list) and tmax_list[i] is not None else 30.0
+            tmin = tmin_list[i] if i < len(tmin_list) and tmin_list[i] is not None else 20.0
+            prec_val = prec_list[i] if i < len(prec_list) and prec_list[i] is not None else 0.0
+
             forecast.append({
-                "date": daily["time"][i],
-                "temp_max": round(daily.get("temperature_2m_max", [30])[i], 1),
-                "temp_min": round(daily.get("temperature_2m_min", [20])[i], 1),
-                "precip_sum": round(daily.get("precipitation_sum", [0])[i], 1),
+                "date": daily_times[i],
+                "temp_max": round(float(tmax), 1),
+                "temp_min": round(float(tmin), 1),
+                "precip_sum": round(float(prec_val), 1),
                 "desc_en": day_desc_en,
                 "desc_mr": day_desc_mr,
                 "icon": day_icon
@@ -126,11 +147,24 @@ def _fetch_openweathermap(lat, lon, district_name):
     resp.raise_for_status()
     data = resp.json()
 
-    temp = round(data.get("main", {}).get("temp", 28.0), 1)
-    humidity = round(data.get("main", {}).get("humidity", 60.0), 1)
-    wind_speed = round(data.get("wind", {}).get("speed", 3.0) * 3.6, 1)  # convert m/s to km/h
-    precip = round(data.get("rain", {}).get("1h", 0.0), 1)
-    cond_en = data.get("weather", [{}])[0].get("main", "Clear")
+    main_data = data.get("main") or {}
+    wind_data = data.get("wind") or {}
+    rain_data = data.get("rain") or {}
+    weather_list = data.get("weather") or [{}]
+
+    temp_val = main_data.get("temp", 28.0)
+    temp = round(float(temp_val if temp_val is not None else 28.0), 1)
+
+    hum_val = main_data.get("humidity", 60.0)
+    humidity = round(float(hum_val if hum_val is not None else 60.0), 1)
+
+    wind_val = wind_data.get("speed", 3.0)
+    wind_speed = round(float(wind_val if wind_val is not None else 3.0) * 3.6, 1)  # convert m/s to km/h
+
+    precip_val = rain_data.get("1h", 0.0) if isinstance(rain_data, dict) else 0.0
+    precip = round(float(precip_val if precip_val is not None else 0.0), 1)
+
+    cond_en = (weather_list[0] if weather_list else {}).get("main", "Clear")
 
     risk_assessment = _calculate_crop_risk(temp, humidity, precip, wind_speed)
 

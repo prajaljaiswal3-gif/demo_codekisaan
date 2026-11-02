@@ -1,3 +1,4 @@
+from urllib.parse import urlparse
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 from app.database import get_db_connection
 from app.config import Config
@@ -47,4 +48,8 @@ def set_language(lang):
     if lang in Config.LANGUAGES:
         session["lang"] = lang
     next_url = request.args.get("next") or url_for("main.index")
+    # Prevent open redirect vulnerabilities
+    parsed = urlparse(next_url)
+    if parsed.netloc or not next_url.startswith("/") or next_url.startswith("//"):
+        next_url = url_for("main.index")
     return redirect(next_url)
