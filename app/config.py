@@ -13,7 +13,7 @@ load_dotenv(BASE_DIR / ".env")
 class Config:
     BASE_DIR = BASE_DIR
     SECRET_KEY = os.getenv("SECRET_KEY", "codekisaan-dev-secret-key-agri-seva-2026")
-    DEBUG = os.getenv("FLASK_DEBUG", "True").lower() in ("true", "1", "t")
+    DEBUG = os.getenv("FLASK_DEBUG", "False").lower() in ("true", "1", "t")
     
     # Detect Vercel / AWS Lambda Serverless execution environment
     IS_SERVERLESS = os.getenv("VERCEL") == "1" or os.getenv("AWS_LAMBDA_FUNCTION_NAME") is not None
