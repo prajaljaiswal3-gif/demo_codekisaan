@@ -7,8 +7,10 @@ pluggable ML model connector, and transparent status labeling.
 import os
 import math
 from pathlib import Path
-from PIL import Image
 from app.config import Config
+
+# PIL/Pillow is imported lazily inside functions to avoid import failure
+# on Vercel cold-start if compiled wheels are not yet available.
 
 # Grounded botanical knowledge base for Maharashtra's primary crops
 CROP_DISEASE_REGISTRY = {
@@ -199,6 +201,7 @@ def validate_uploaded_image(file_stream):
     Returns (is_valid, error_message, image_obj).
     """
     try:
+        from PIL import Image
         image = Image.open(file_stream)
         # Verify it's a real image and not an executable with renamed extension
         image.verify()
@@ -252,7 +255,8 @@ def analyze_leaf_image(image_path, crop_hint="Cotton"):
     # Extract botanical chromatic features from actual uploaded leaf
     try:
         import numpy as np
-        with Image.open(image_path) as img:
+        from PIL import Image as PILImage
+        with PILImage.open(image_path) as img:
             rgb_img = img.convert("RGB")
             # Downsample for fast feature vector analysis
             small = rgb_img.resize((150, 150))
