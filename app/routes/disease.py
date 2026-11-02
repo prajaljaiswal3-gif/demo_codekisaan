@@ -25,12 +25,14 @@ def analyze_scan():
 
     # Option A: Quick Sample Leaf testing for Judges
     if sample_name:
-        sample_source = Config.BASE_DIR / "app" / "static" / "img" / "samples" / secure_filename(sample_name)
-        if sample_source.exists():
-            timestamp = int(time.time())
-            saved_filename = f"sample_{timestamp}_{sample_name}"
-            saved_path = Config.UPLOAD_FOLDER / saved_filename
-            shutil.copy(sample_source, saved_path)
+        safe_sample = secure_filename(sample_name)
+        if safe_sample:
+            sample_source = Config.BASE_DIR / "app" / "static" / "img" / "samples" / safe_sample
+            if sample_source.exists():
+                timestamp = int(time.time())
+                saved_filename = f"sample_{timestamp}_{safe_sample}"
+                saved_path = Config.UPLOAD_FOLDER / saved_filename
+                shutil.copy(sample_source, saved_path)
 
     # Option B: Uploaded Leaf Photo from Farmer
     if not saved_path:
@@ -43,6 +45,13 @@ def analyze_scan():
             flash("कोणतीही फाईल निवडली नाही / No file selected.", "warning")
             return redirect(url_for("disease.scan_page"))
 
+        # Verify extension security against allowed list
+        ext = file.filename.rsplit(".", 1)[1].lower() if "." in file.filename else ""
+        if ext not in Config.ALLOWED_EXTENSIONS:
+            allowed_list = ", ".join(sorted(Config.ALLOWED_EXTENSIONS))
+            flash(f"अवैध फाईल प्रकार. फक्त {allowed_list} समर्थित आहेत / Unsupported file format. Allowed: {allowed_list}", "danger")
+            return redirect(url_for("disease.scan_page"))
+
         # Structural & Cryptographic PIL Image Validation
         is_valid, error_msg, _ = validate_uploaded_image(file.stream)
         if not is_valid:
@@ -51,9 +60,9 @@ def analyze_scan():
 
         # Reset stream and save securely
         file.stream.seek(0)
-        ext = file.filename.rsplit(".", 1)[1].lower() if "." in file.filename else "jpg"
         timestamp = int(time.time())
-        clean_name = secure_filename(file.filename.rsplit(".", 1)[0])
+        base_name = file.filename.rsplit(".", 1)[0] if "." in file.filename else "leaf"
+        clean_name = secure_filename(base_name) or "leaf"
         saved_filename = f"scan_{timestamp}_{clean_name}.{ext}"
         saved_path = Config.UPLOAD_FOLDER / saved_filename
         file.save(saved_path)
@@ -70,14 +79,17 @@ def analyze_scan():
     cursor = conn.cursor()
     cursor.execute("""
         INSERT INTO scans (
-            filename, crop_name, predicted_disease, confidence, status, severity,
+            filename, crop_name, predicted_disease, disease_mr, disease_hi,
+            confidence, status, severity,
             summary_en, summary_hi, summary_mr,
             organic_remedy, chemical_remedy, prevention_tip, model_mode
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
         saved_filename,
         crop_name,
         diagnosis["disease_en"],
+        diagnosis.get("disease_mr"),
+        diagnosis.get("disease_hi"),
         diagnosis["confidence"],
         diagnosis["status"],
         diagnosis["severity"],

@@ -21,6 +21,8 @@ def init_db():
         filename TEXT NOT NULL,
         crop_name TEXT NOT NULL,
         predicted_disease TEXT NOT NULL,
+        disease_mr TEXT,
+        disease_hi TEXT,
         confidence REAL NOT NULL,
         status TEXT NOT NULL,
         severity TEXT DEFAULT 'Medium',
@@ -33,6 +35,24 @@ def init_db():
         model_mode TEXT DEFAULT 'Trained MobileNetV2 Prototype',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
+    """)
+
+    # Ensure schema migration for existing databases
+    cursor.execute("PRAGMA table_info(scans)")
+    scan_cols = [col[1] for col in cursor.fetchall()]
+    if "disease_mr" not in scan_cols:
+        cursor.execute("ALTER TABLE scans ADD COLUMN disease_mr TEXT")
+    if "disease_hi" not in scan_cols:
+        cursor.execute("ALTER TABLE scans ADD COLUMN disease_hi TEXT")
+
+    # Backfill seeded records if needed
+    cursor.execute("""
+        UPDATE scans SET disease_mr = 'कपाशीवरील जिवाणूजन्य करपा रोग', disease_hi = 'कपास का जीवाणु झुलसा'
+        WHERE (disease_mr IS NULL OR disease_mr = '') AND crop_name = 'Cotton' AND predicted_disease LIKE '%Bacterial Blight%'
+    """)
+    cursor.execute("""
+        UPDATE scans SET disease_mr = 'निरोगी सोयाबीन पान', disease_hi = 'स्वस्थ सोयाबीन पत्ती'
+        WHERE (disease_mr IS NULL OR disease_mr = '') AND crop_name = 'Soybean' AND predicted_disease LIKE '%Healthy%'
     """)
 
     # Table 2: Agricultural Knowledge Base & Crop Guidance
@@ -206,6 +226,7 @@ def seed_sample_scans(conn):
     samples = [
         (
             "sample_cotton_leaf.jpg", "Cotton", "Bacterial Blight (Angular Leaf Spot)",
+            "कपाशीवरील जिवाणूजन्य करपा रोग", "कपास का जीवाणु झुलसा (बैक्टीरियल ब्लाइट)",
             94.2, "Action Required", "High",
             "Angular water-soaked spots on leaf surfaces bounded by veins.",
             "पत्तियों की नसों के बीच पानी जैसे कोणीय धब्बे दिखाई दे रहे हैं।",
@@ -217,6 +238,7 @@ def seed_sample_scans(conn):
         ),
         (
             "sample_soybean_leaf.jpg", "Soybean", "Healthy Foliage (निरोगी पान)",
+            "निरोगी सोयाबीन पान", "स्वस्थ सोयाबीन पत्ती",
             98.5, "Optimal Health", "Low",
             "No pathogens or discoloration observed; lush green healthy leaf structure.",
             "कोई रोग या कीड़ा नहीं पाया गया; फसल स्वस्थ एवं सामान्य है।",
@@ -229,9 +251,10 @@ def seed_sample_scans(conn):
     ]
     cursor.executemany("""
     INSERT INTO scans (
-        filename, crop_name, predicted_disease, confidence, status, severity,
+        filename, crop_name, predicted_disease, disease_mr, disease_hi,
+        confidence, status, severity,
         summary_en, summary_hi, summary_mr,
         organic_remedy, chemical_remedy, prevention_tip, model_mode
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, samples)
     conn.commit()
