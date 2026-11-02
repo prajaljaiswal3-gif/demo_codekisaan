@@ -8,8 +8,11 @@ def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
 
-    # Initialize SQLite database and seed data
-    init_db()
+    # Initialize SQLite database and seed data safely
+    try:
+        init_db()
+    except Exception as e:
+        print(f"[Warning] Database initialization skipped or deferred: {e}")
 
     # Serve uploaded images smoothly across both local and Vercel serverless environments
     @app.route("/static/uploads/<path:filename>")

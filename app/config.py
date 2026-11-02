@@ -25,7 +25,11 @@ class Config:
         bundled_db = BASE_DIR / "codekisaan.db"
         if not DB_PATH.exists() and bundled_db.exists():
             try:
-                shutil.copy(bundled_db, DB_PATH)
+                shutil.copyfile(bundled_db, DB_PATH)
+                try:
+                    os.chmod(DB_PATH, 0o666)
+                except Exception:
+                    pass
             except Exception:
                 pass
         UPLOAD_FOLDER = TMP_DIR / "uploads"
