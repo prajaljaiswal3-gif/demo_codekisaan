@@ -50,6 +50,113 @@ TRANSLATIONS = {
         "hi": "किसान सहायता",
         "mr": "शेतकरी मदत कक्ष"
     },
+    "nav_login": {
+        "en": "Login",
+        "hi": "लॉगिन",
+        "mr": "लॉगिन"
+    },
+    "nav_register": {
+        "en": "Farmer Register",
+        "hi": "किसान पंजीकरण",
+        "mr": "शेतकरी नोंदणी"
+    },
+    "nav_logout": {
+        "en": "Logout",
+        "hi": "लॉगआउट",
+        "mr": "लॉगआउट"
+    },
+
+    # Authentication
+    "login_title": {
+        "en": "Farmer Login",
+        "hi": "किसान लॉगिन",
+        "mr": "शेतकरी लॉगिन"
+    },
+    "login_subhead": {
+        "en": "Access your personalized farm advisory, disease reports, and weather alerts.",
+        "hi": "अपनी व्यक्तिगत कृषि सलाह, रोग रिपोर्ट और मौसम अलर्ट प्राप्त करें।",
+        "mr": "आपला वैयक्तिक शेती सल्ला, पीक रोग अहवाल आणि हवामान अंदाज पाहण्यासाठी प्रवेश करा."
+    },
+    "register_title": {
+        "en": "New Farmer Registration",
+        "hi": "नया किसान पंजीकरण",
+        "mr": "नवीन शेतकरी नोंदणी"
+    },
+    "register_subhead": {
+        "en": "Join CodeKisaan Digital Cooperative for free AI diagnosis and scientific advice.",
+        "hi": "निःशुल्क एआई जांच और वैज्ञानिक सलाह हेतु कोडकिसान सहकारी केंद्र से जुड़ें।",
+        "mr": "विनामूल्य AI पीक रोग निदान आणि शास्त्रोक्त सल्ल्यासाठी कोडकिसान परिवारामध्ये सामील व्हा."
+    },
+    "full_name_label": {
+        "en": "Full Name",
+        "hi": "पूरा नाम",
+        "mr": "पूर्ण नाव"
+    },
+    "mobile_label": {
+        "en": "Mobile Number (10 Digits)",
+        "hi": "मोबाइल नंबर (10 अंक)",
+        "mr": "मोबाईल क्रमांक (१० अंक)"
+    },
+    "email_label": {
+        "en": "Email Address (Optional)",
+        "hi": "ईमेल पता (वैकल्पिक)",
+        "mr": "ईमेल पत्ता (ऐच्छिक)"
+    },
+    "password_label": {
+        "en": "Password",
+        "hi": "पासवर्ड",
+        "mr": "पासवर्ड"
+    },
+    "confirm_password_label": {
+        "en": "Confirm Password",
+        "hi": "पासवर्ड की पुष्टि करें",
+        "mr": "पासवर्डची पुष्टी करा"
+    },
+    "village_label": {
+        "en": "Village / Town",
+        "hi": "गांव / कस्बा",
+        "mr": "गाव / शहर"
+    },
+    "district_label": {
+        "en": "District",
+        "hi": "जिला",
+        "mr": "जिल्हा"
+    },
+    "state_label": {
+        "en": "State",
+        "hi": "राज्य",
+        "mr": "राज्य"
+    },
+    "remember_me": {
+        "en": "Remember Me",
+        "hi": "मुझे याद रखें",
+        "mr": "माझी माहिती लक्षात ठेवा"
+    },
+    "btn_login": {
+        "en": "Login to Dashboard",
+        "hi": "डैशबोर्ड में लॉगिन करें",
+        "mr": "डॅशबोर्डमध्ये लॉगिन करा"
+    },
+    "btn_register": {
+        "en": "Register Farmer Account",
+        "hi": "किसान खाता पंजीकृत करें",
+        "mr": "शेतकरी नोंदणी पूर्ण करा"
+    },
+    "already_registered": {
+        "en": "Already registered? Login here",
+        "hi": "पहले से पंजीकृत हैं? यहां लॉगिन करें",
+        "mr": "आधीच नोंदणी केली आहे का? येथे लॉगिन करा"
+    },
+    "new_farmer_prompt": {
+        "en": "New Farmer? Create free account",
+        "hi": "नए किसान हैं? निःशुल्क खाता बनाएं",
+        "mr": "नवीन शेतकरी आहात का? मोफत खाते तयार करा"
+    },
+    "demo_creds_title": {
+        "en": "Quick Demo / Evaluator Login",
+        "hi": "त्वरित डेमो / मूल्यांकनकर्ता लॉगिन",
+        "mr": "त्वरित चाचणी / परीक्षक लॉगिन"
+    },
 
     # Landing Page Hero
     "hero_title": {
@@ -80,9 +187,9 @@ TRANSLATIONS = {
 
     # Dashboard
     "dash_welcome": {
-        "en": "Namaste, Farmer Friend",
-        "hi": "नमस्ते, किसान बंधु",
-        "mr": "राम राम, शेतकरी मित्र"
+        "en": "Namaste",
+        "hi": "नमस्ते",
+        "mr": "राम राम"
     },
     "dash_subhead": {
         "en": "Live agricultural advisory and farm analytics for Maharashtra agro-climatic zones.",
@@ -113,6 +220,26 @@ TRANSLATIONS = {
         "en": "Recent Leaf Diagnostic History",
         "hi": "हालिया पत्ती निदान इतिहास",
         "mr": "नुकताच झालेला पान तपासणी इतिहास"
+    },
+    "farmer_profile_title": {
+        "en": "Farmer Profile",
+        "hi": "किसान प्रोफ़ाइल",
+        "mr": "शेतकरी माहिती"
+    },
+    "registered_member": {
+        "en": "Registered Cooperative Member",
+        "hi": "पंजीकृत सहकारी सदस्य",
+        "mr": "नोंदणीकृत शेतकरी सदस्य"
+    },
+    "member_id": {
+        "en": "Member ID",
+        "hi": "सदस्यता क्रमांक",
+        "mr": "सदस्य क्रमांक"
+    },
+    "smart_recommendations_title": {
+        "en": "Smart Farming Recommendations",
+        "hi": "स्मार्ट कृषि सिफारिशें",
+        "mr": "स्मार्ट शेती शिफारशी"
     },
 
     # Disease Detection

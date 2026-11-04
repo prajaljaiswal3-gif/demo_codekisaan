@@ -1,6 +1,7 @@
 import sqlite3
 import os
 from datetime import datetime
+from werkzeug.security import generate_password_hash
 from app.config import Config
 
 def get_db_connection():
@@ -13,6 +14,21 @@ def init_db():
     """Initializes tables and seeds initial agricultural guidance records."""
     conn = get_db_connection()
     cursor = conn.cursor()
+
+    # Table 0: Registered Farmers / Cooperative Members
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS farmers (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        full_name TEXT NOT NULL,
+        mobile_number TEXT UNIQUE NOT NULL,
+        email TEXT UNIQUE,
+        password_hash TEXT NOT NULL,
+        village TEXT NOT NULL,
+        district TEXT NOT NULL,
+        state TEXT NOT NULL DEFAULT 'Maharashtra',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    """)
 
     # Table 1: Disease Scans History
     cursor.execute("""
@@ -33,7 +49,9 @@ def init_db():
         chemical_remedy TEXT,
         prevention_tip TEXT,
         model_mode TEXT DEFAULT 'Trained MobileNetV2 Prototype',
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        farmer_id INTEGER,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (farmer_id) REFERENCES farmers (id)
     );
     """)
 
@@ -44,6 +62,8 @@ def init_db():
         cursor.execute("ALTER TABLE scans ADD COLUMN disease_mr TEXT")
     if "disease_hi" not in scan_cols:
         cursor.execute("ALTER TABLE scans ADD COLUMN disease_hi TEXT")
+    if "farmer_id" not in scan_cols:
+        cursor.execute("ALTER TABLE scans ADD COLUMN farmer_id INTEGER")
 
     # Backfill seeded records if needed
     cursor.execute("""
@@ -101,13 +121,45 @@ def init_db():
     if count == 0:
         seed_advisory_data(conn)
 
-    # Seed 2 realistic historical scans if empty to give dashboard immediate hackathon appeal
+    # Seed Demo Farmer if farmers table is empty
+    cursor.execute("SELECT COUNT(*) FROM farmers")
+    farmer_count = cursor.fetchone()[0]
+    if farmer_count == 0:
+        seed_sample_farmer(conn)
+
+    # Seed 2 realistic historical scans if empty to give dashboard immediate appeal
     cursor.execute("SELECT COUNT(*) FROM scans")
     scan_count = cursor.fetchone()[0]
     if scan_count == 0:
         seed_sample_scans(conn)
+    else:
+        # Link existing unlinked scans to the first farmer if present
+        cursor.execute("SELECT id FROM farmers ORDER BY id ASC LIMIT 1")
+        first_farmer = cursor.fetchone()
+        if first_farmer:
+            cursor.execute("UPDATE scans SET farmer_id = ? WHERE farmer_id IS NULL", (first_farmer[0],))
+            conn.commit()
 
     conn.close()
+
+def seed_sample_farmer(conn):
+    """Creates an initial demo farmer account for seamless evaluations and testing."""
+    cursor = conn.cursor()
+    sample_hash = generate_password_hash("password123")
+    cursor.execute("""
+        INSERT INTO farmers (
+            full_name, mobile_number, email, password_hash, village, district, state
+        ) VALUES (?, ?, ?, ?, ?, ?, ?)
+    """, (
+        "रमेश पाटील (Ramesh Patil)",
+        "9876543210",
+        "ramesh.patil@kisaan.org",
+        sample_hash,
+        "बारामती (Baramati)",
+        "Pune",
+        "Maharashtra"
+    ))
+    conn.commit()
 
 def seed_advisory_data(conn):
     cursor = conn.cursor()
@@ -223,6 +275,11 @@ def seed_advisory_data(conn):
 
 def seed_sample_scans(conn):
     cursor = conn.cursor()
+    # Check if a farmer exists to link these scans
+    cursor.execute("SELECT id FROM farmers ORDER BY id ASC LIMIT 1")
+    farmer_row = cursor.fetchone()
+    farmer_id = farmer_row[0] if farmer_row else None
+
     samples = [
         (
             "sample_cotton_leaf.jpg", "Cotton", "Bacterial Blight (Angular Leaf Spot)",
@@ -234,7 +291,8 @@ def seed_sample_scans(conn):
             "कडुनिंब तेल ५ मि.ली./लिटर किंवा बोर्डो मिश्रण १% फवारावे.",
             "Copper Oxychloride 50% WP (2.5 g/L) + Streptocycline (1 g/10L).",
             "Maintain plant spacing and sanitize field equipment.",
-            "Trained MobileNetV2 Prototype"
+            "Trained MobileNetV2 Prototype",
+            farmer_id
         ),
         (
             "sample_soybean_leaf.jpg", "Soybean", "Healthy Foliage (निरोगी पान)",
@@ -246,7 +304,8 @@ def seed_sample_scans(conn):
             "Continue standard organic compost and microbial soil health boosters.",
             "N/A (Crop is healthy)",
             "Regular scouting and clean weeding.",
-            "Trained MobileNetV2 Prototype"
+            "Trained MobileNetV2 Prototype",
+            farmer_id
         )
     ]
     cursor.executemany("""
@@ -254,7 +313,7 @@ def seed_sample_scans(conn):
         filename, crop_name, predicted_disease, disease_mr, disease_hi,
         confidence, status, severity,
         summary_en, summary_hi, summary_mr,
-        organic_remedy, chemical_remedy, prevention_tip, model_mode
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        organic_remedy, chemical_remedy, prevention_tip, model_mode, farmer_id
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, samples)
     conn.commit()

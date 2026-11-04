@@ -41,12 +41,14 @@ def create_app(config_class=Config):
 
     # Register Route Blueprints
     from app.routes.main import main_bp
+    from app.routes.auth import auth_bp
     from app.routes.dashboard import dashboard_bp
     from app.routes.disease import disease_bp
     from app.routes.weather import weather_bp
     from app.routes.advisory import advisory_bp
 
     app.register_blueprint(main_bp)
+    app.register_blueprint(auth_bp)
     app.register_blueprint(dashboard_bp)
     app.register_blueprint(disease_bp)
     app.register_blueprint(weather_bp)

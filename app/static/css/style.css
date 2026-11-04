@@ -512,3 +512,77 @@ h1, h2, h3, h4, h5, h6, .brand-font {
     font-size: 1.5rem;
   }
 }
+
+
+/* ==========================================================================
+   Farmer Authentication & Registration System Styles
+   ========================================================================== */
+.bg-kisaan-light {
+  background-color: #f4f8f5;
+  background-image: radial-gradient(#d8f3dc 0.8px, transparent 0.8px);
+  background-size: 20px 20px;
+}
+
+.auth-card {
+  border-radius: 18px;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.auth-header-banner {
+  background: linear-gradient(135deg, #0e2b1d 0%, #1b4d3e 60%, #2e7d56 100%);
+  position: relative;
+}
+
+.auth-header-banner::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 85% 20%, rgba(116, 198, 157, 0.25) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.auth-leaf-icon-badge {
+  width: 72px;
+  height: 72px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.2rem;
+  color: #74c69d;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: var(--kisaan-leaf);
+  box-shadow: 0 0 0 0.25rem rgba(46, 125, 86, 0.18);
+}
+
+.btn-toggle-pw {
+  background: #f8f9fa;
+  color: var(--kisaan-text-muted);
+  border-color: #dee2e6;
+  transition: all 0.2s ease;
+}
+
+.btn-toggle-pw:hover {
+  background: #e9ecef;
+  color: var(--kisaan-leaf);
+}
+
+.farmer-avatar {
+  background: linear-gradient(135deg, #1b4d3e, #2e7d56);
+  border: 3px solid #ffffff;
+}
+
+@media (min-width: 768px) {
+  .border-end-md {
+    border-right: 1px solid var(--kisaan-border);
+  }
+}

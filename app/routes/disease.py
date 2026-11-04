@@ -2,7 +2,7 @@ import os
 import shutil
 import time
 from pathlib import Path
-from flask import Blueprint, render_template, request, redirect, url_for, flash, abort
+from flask import Blueprint, render_template, request, redirect, url_for, flash, abort, session
 from werkzeug.utils import secure_filename
 
 from app.config import Config
@@ -74,6 +74,9 @@ def analyze_scan():
         flash(f"प्रतिमा विश्लेषणात त्रुटी उद्भवली: {str(e)}", "danger")
         return redirect(url_for("disease.scan_page"))
 
+    # Associate scan with logged-in farmer if authenticated
+    farmer_id = session.get("farmer_id")
+
     # Persist Diagnostic Record into Database
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -82,8 +85,9 @@ def analyze_scan():
             filename, crop_name, predicted_disease, disease_mr, disease_hi,
             confidence, status, severity,
             summary_en, summary_hi, summary_mr,
-            organic_remedy, chemical_remedy, prevention_tip, model_mode
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            organic_remedy, chemical_remedy, prevention_tip, model_mode,
+            farmer_id
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
         saved_filename,
         crop_name,
@@ -99,7 +103,8 @@ def analyze_scan():
         diagnosis["organic_remedy"],
         diagnosis["chemical_remedy"],
         diagnosis["prevention"],
-        diagnosis["model_mode"]
+        diagnosis["model_mode"],
+        farmer_id
     ))
     scan_id = cursor.lastrowid
     conn.commit()

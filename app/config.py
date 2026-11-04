@@ -1,6 +1,7 @@
 import os
 import shutil
 import tempfile
+from datetime import timedelta
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -15,6 +16,11 @@ class Config:
     SECRET_KEY = os.getenv("SECRET_KEY", "codekisaan-dev-secret-key-agri-seva-2026")
     DEBUG = os.getenv("FLASK_DEBUG", "False").lower() in ("true", "1", "t")
     
+    # Session Security & Remember Me Duration
+    PERMANENT_SESSION_LIFETIME = timedelta(days=30)
+    SESSION_COOKIE_HTTPONLY = True
+    SESSION_COOKIE_SAMESITE = "Lax"
+
     # Detect Vercel / AWS Lambda Serverless execution environment
     IS_SERVERLESS = os.getenv("VERCEL") == "1" or os.getenv("AWS_LAMBDA_FUNCTION_NAME") is not None
 

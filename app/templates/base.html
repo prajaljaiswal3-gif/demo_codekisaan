@@ -74,17 +74,42 @@
                     </li>
                 </ul>
 
-                <!-- Right Side: Trilingual Language Switcher & Scan CTA -->
-                <div class="d-flex align-items-center gap-3">
+                <!-- Right Side: Trilingual Language Switcher, Auth status & Scan CTA -->
+                <div class="d-flex align-items-center gap-2 flex-wrap justify-content-end">
                     <!-- Trilingual Language Toggle -->
-                    <div class="lang-selector-group" title="Change Language / भाषा बदला">
+                    <div class="lang-selector-group me-1" title="Change Language / भाषा बदला">
                         <a href="{{ url_for('main.set_language', lang='en', next=request.path) }}" class="lang-btn {% if session.get('lang') == 'en' %}active{% endif %}">EN</a>
                         <a href="{{ url_for('main.set_language', lang='hi', next=request.path) }}" class="lang-btn {% if session.get('lang') == 'hi' %}active{% endif %}">हिन्दी</a>
                         <a href="{{ url_for('main.set_language', lang='mr', next=request.path) }}" class="lang-btn {% if session.get('lang', 'mr') == 'mr' %}active{% endif %}">मराठी</a>
                     </div>
 
+                    <!-- Authentication States -->
+                    {% if session.get('farmer_id') %}
+                        <!-- Authenticated Farmer Dropdown / Pill -->
+                        <div class="d-flex align-items-center gap-1">
+                            <a href="{{ url_for('dashboard.view_dashboard') }}" class="btn btn-outline-success btn-sm rounded-pill d-inline-flex align-items-center gap-1 px-3 py-1 fw-semibold shadow-sm" title="View Dashboard">
+                                <i class="bi bi-person-circle text-success fs-6"></i>
+                                <span>{{ session.get('farmer_name', 'शेतकरी').split(' ')[0] }}</span>
+                            </a>
+                            <a href="{{ url_for('auth.logout') }}" class="btn btn-outline-danger btn-sm rounded-pill px-2 py-1" title="लॉगआउट करा / Logout">
+                                <i class="bi bi-box-arrow-right"></i>
+                                <span class="d-none d-lg-inline ms-1">{{ t('nav_logout', 'लॉगआउट') }}</span>
+                            </a>
+                        </div>
+                    {% else %}
+                        <!-- Guest State: Login & Register Links -->
+                        <div class="d-flex align-items-center gap-1">
+                            <a href="{{ url_for('auth.login') }}" class="btn btn-outline-success btn-sm rounded-pill px-3 py-1 {% if active_page == 'login' %}active{% endif %}">
+                                <i class="bi bi-box-arrow-in-right me-1"></i> {{ t('nav_login', 'लॉगिन') }}
+                            </a>
+                            <a href="{{ url_for('auth.register') }}" class="btn btn-kisaan-primary btn-sm rounded-pill px-3 py-1 {% if active_page == 'register' %}active{% endif %}">
+                                <i class="bi bi-person-plus me-1"></i> {{ t('nav_register', 'नोंदणी') }}
+                            </a>
+                        </div>
+                    {% endif %}
+
                     <!-- Quick Scan Action Button -->
-                    <a href="{{ url_for('disease.scan_page') }}" class="btn btn-kisaan-primary d-none d-sm-inline-flex btn-sm py-2 px-3">
+                    <a href="{{ url_for('disease.scan_page') }}" class="btn btn-kisaan-primary d-none d-xl-inline-flex btn-sm py-1 px-3 rounded-pill ms-1">
                         <i class="bi bi-camera"></i>
                         <span>{{ t('cta_scan_now') }}</span>
                     </a>
@@ -142,6 +167,12 @@
                         <li><a href="{{ url_for('weather.view_weather') }}" class="footer-link">{{ t('nav_weather') }}</a></li>
                         <li><a href="{{ url_for('dashboard.view_dashboard') }}" class="footer-link">{{ t('nav_dashboard') }}</a></li>
                         <li><a href="{{ url_for('advisory.view_advisory') }}" class="footer-link">{{ t('nav_advisory') }}</a></li>
+                        {% if not session.get('farmer_id') %}
+                        <li><a href="{{ url_for('auth.login') }}" class="footer-link">{{ t('nav_login', 'शेतकरी लॉगिन') }}</a></li>
+                        <li><a href="{{ url_for('auth.register') }}" class="footer-link">{{ t('nav_register', 'नवीन नोंदणी') }}</a></li>
+                        {% else %}
+                        <li><a href="{{ url_for('auth.logout') }}" class="footer-link text-warning">{{ t('nav_logout', 'लॉगआउट') }}</a></li>
+                        {% endif %}
                     </ul>
                 </div>
 

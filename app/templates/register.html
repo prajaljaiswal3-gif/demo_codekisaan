@@ -1,0 +1,321 @@
+{% extends "base.html" %}
+
+{% block title %}{{ t('register_title') }} - {{ t('app_name') }}{% endblock %}
+
+{% block content %}
+<section class="py-5 bg-kisaan-light position-relative">
+    <div class="container py-2">
+        <div class="row justify-content-center">
+            <div class="col-xl-9 col-lg-10">
+                <!-- Registration Main Card -->
+                <div class="kisaan-card auth-card shadow-lg border-0 overflow-hidden">
+                    <!-- Agricultural Decorative Header Banner -->
+                    <div class="auth-header-banner p-4 p-md-5 text-white position-relative">
+                        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 position-relative z-1">
+                            <div>
+                                <span class="badge bg-white bg-opacity-20 text-white rounded-pill px-3 py-2 fw-semibold mb-2">
+                                    <i class="bi bi-patch-check-fill text-warning me-1"></i> शेतकरी सहकार्य केंद्र नोंदणी • SEVA 2026
+                                </span>
+                                <h1 class="h2 fw-bold mb-2 text-white">{{ t('register_title') }}</h1>
+                                <p class="text-white-50 mb-0 small" style="max-width: 580px;">
+                                    {{ t('register_subhead') }}
+                                </p>
+                            </div>
+                            <div class="d-none d-md-block text-end">
+                                <div class="auth-leaf-icon-badge">
+                                    <i class="bi bi-flower1"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Trust Strip -->
+                    <div class="bg-success bg-opacity-10 py-2 px-4 border-bottom border-success border-opacity-10">
+                        <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 small text-success fw-medium">
+                            <div><i class="bi bi-shield-check me-1"></i> १००% मोफत व सुरक्षित शेतकरी सदस्य नोंदणी</div>
+                            <div><i class="bi bi-cpu me-1"></i> AI पीक डॉक्टर व हवामान जोखीम सूचना</div>
+                            <div><i class="bi bi-geo-alt me-1"></i> संपूर्ण महाराष्ट्र शेतकरी सहकार्य</div>
+                        </div>
+                    </div>
+
+                    <div class="p-4 p-md-5">
+                        <form method="POST" action="{{ url_for('auth.register') }}" id="farmerRegisterForm" novalidate>
+                            <div class="row g-4">
+                                <!-- Col 1: Personal & Contact Info -->
+                                <div class="col-md-6">
+                                    <h5 class="fw-bold text-success border-bottom pb-2 mb-3">
+                                        <i class="bi bi-person-lines-fill me-2"></i>व्यक्तिगत व संपर्क माहिती
+                                    </h5>
+
+                                    <!-- 1. Full Name -->
+                                    <div class="mb-3">
+                                        <label for="fullNameInput" class="form-label fw-semibold text-dark">
+                                            {{ t('full_name_label') }} <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light text-success border-end-0">
+                                                <i class="bi bi-person-fill"></i>
+                                            </span>
+                                            <input type="text" 
+                                                   class="form-control border-start-0" 
+                                                   id="fullNameInput" 
+                                                   name="full_name" 
+                                                   placeholder="उदा. रमेश मारुती पाटील" 
+                                                   value="{{ form_data.get('full_name', '') }}" 
+                                                   required 
+                                                   minlength="2">
+                                        </div>
+                                        <div class="form-text small">शेतकरी ओळखपत्रावरील पूर्ण नाव प्रविष्ट करा.</div>
+                                    </div>
+
+                                    <!-- 2. Mobile Number -->
+                                    <div class="mb-3">
+                                        <label for="mobileInput" class="form-label fw-semibold text-dark">
+                                            {{ t('mobile_label') }} <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light text-success border-end-0 fw-bold">
+                                                <i class="bi bi-telephone-fill me-1"></i> +91
+                                            </span>
+                                            <input type="tel" 
+                                                   class="form-control border-start-0" 
+                                                   id="mobileInput" 
+                                                   name="mobile_number" 
+                                                   placeholder="98XXXXXXXX" 
+                                                   value="{{ form_data.get('mobile_number', '') }}" 
+                                                   required 
+                                                   maxlength="10"
+                                                   pattern="[0-9]{10}">
+                                        </div>
+                                        <div class="form-text small">हा क्रमांक भविष्यात लॉगिन करण्यासाठी वापरला जाईल.</div>
+                                    </div>
+
+                                    <!-- 3. Email Address (Optional) -->
+                                    <div class="mb-3">
+                                        <label for="emailInput" class="form-label fw-semibold text-dark">
+                                            {{ t('email_label') }}
+                                        </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light text-muted border-end-0">
+                                                <i class="bi bi-envelope-fill"></i>
+                                            </span>
+                                            <input type="email" 
+                                                   class="form-control border-start-0" 
+                                                   id="emailInput" 
+                                                   name="email" 
+                                                   placeholder="farmer@example.com (ऐच्छिक)" 
+                                                   value="{{ form_data.get('email', '') }}">
+                                        </div>
+                                        <div class="form-text small">ईमेल नसेल तरीही नोंदणी करता येईल.</div>
+                                    </div>
+
+                                    <!-- 4. Village Name -->
+                                    <div class="mb-3">
+                                        <label for="villageInput" class="form-label fw-semibold text-dark">
+                                            {{ t('village_label') }} <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light text-success border-end-0">
+                                                <i class="bi bi-house-door-fill"></i>
+                                            </span>
+                                            <input type="text" 
+                                                   class="form-control border-start-0" 
+                                                   id="villageInput" 
+                                                   name="village" 
+                                                   placeholder="उदा. बारामती, माळेगाव, शिरूर" 
+                                                   value="{{ form_data.get('village', '') }}" 
+                                                   required>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Col 2: Location & Security Credentials -->
+                                <div class="col-md-6">
+                                    <h5 class="fw-bold text-success border-bottom pb-2 mb-3">
+                                        <i class="bi bi-shield-lock-fill me-2"></i>स्थान व सुरक्षा पासवर्ड
+                                    </h5>
+
+                                    <!-- 5. District -->
+                                    <div class="mb-3">
+                                        <label for="districtSelect" class="form-label fw-semibold text-dark">
+                                            {{ t('district_label') }} <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light text-success border-end-0">
+                                                <i class="bi bi-geo-alt-fill"></i>
+                                            </span>
+                                            <select class="form-select border-start-0" id="districtSelect" name="district" required>
+                                                {% for d in districts %}
+                                                <option value="{{ d }}" {% if form_data.get('district') == d or (not form_data.get('district') and d == 'Pune') %}selected{% endif %}>
+                                                    {{ d }}
+                                                </option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="form-text small">आपल्या जिल्ह्यानुसार थेट हवामान व फवारणी सल्ला मिळेल.</div>
+                                    </div>
+
+                                    <!-- 6. State -->
+                                    <div class="mb-3">
+                                        <label for="stateInput" class="form-label fw-semibold text-dark">
+                                            {{ t('state_label') }} <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light text-muted border-end-0">
+                                                <i class="bi bi-map-fill"></i>
+                                            </span>
+                                            <input type="text" 
+                                                   class="form-control border-start-0 bg-light" 
+                                                   id="stateInput" 
+                                                   name="state" 
+                                                   value="{{ form_data.get('state', 'Maharashtra') }}" 
+                                                   readonly>
+                                        </div>
+                                    </div>
+
+                                    <!-- 7. Password -->
+                                    <div class="mb-3">
+                                        <label for="passwordInput" class="form-label fw-semibold text-dark">
+                                            {{ t('password_label') }} <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light text-success border-end-0">
+                                                <i class="bi bi-lock-fill"></i>
+                                            </span>
+                                            <input type="password" 
+                                                   class="form-control border-start-0 border-end-0" 
+                                                   id="passwordInput" 
+                                                   name="password" 
+                                                   placeholder="किमान ६ अक्षरे/अंक" 
+                                                   required 
+                                                   minlength="6">
+                                            <button class="btn btn-outline-secondary border-start-0 btn-toggle-pw" type="button" data-target="passwordInput" title="पासवर्ड पहा / लपवा">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                        </div>
+                                        <div class="form-text small">किमान ६ अक्षरांचा मजबूत पासवर्ड ठेवा.</div>
+                                    </div>
+
+                                    <!-- 8. Confirm Password -->
+                                    <div class="mb-3">
+                                        <label for="confirmPasswordInput" class="form-label fw-semibold text-dark">
+                                            {{ t('confirm_password_label') }} <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light text-success border-end-0">
+                                                <i class="bi bi-shield-lock-fill"></i>
+                                            </span>
+                                            <input type="password" 
+                                                   class="form-control border-start-0 border-end-0" 
+                                                   id="confirmPasswordInput" 
+                                                   name="confirm_password" 
+                                                   placeholder="पुन्हा पासवर्ड प्रविष्ट करा" 
+                                                   required 
+                                                   minlength="6">
+                                            <button class="btn btn-outline-secondary border-start-0 btn-toggle-pw" type="button" data-target="confirmPasswordInput" title="पासवर्ड पहा / लपवा">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                        </div>
+                                        <div id="pwMatchFeedback" class="small mt-1" style="display:none;"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Cooperative Consent Notice -->
+                            <div class="form-check my-3 p-3 bg-light rounded-3 border">
+                                <input class="form-check-input ms-0 me-2" type="checkbox" value="1" id="agreeTerms" checked required>
+                                <label class="form-check-label small text-muted" for="agreeTerms">
+                                    मी याद्वारे कोडकिसान डिजिटल शेतकरी सहकार्य केंद्राच्या मोफत कृषी मार्गदर्शन आणि डेटा वापराच्या अटी मान्य करतो.
+                                </label>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="d-grid mt-4">
+                                <button type="submit" class="btn btn-kisaan-primary py-3 fs-6 rounded-3 shadow-sm fw-bold" id="btnSubmitRegister">
+                                    <i class="bi bi-check-circle-fill me-2"></i> {{ t('btn_register') }}
+                                </button>
+                            </div>
+
+                            <!-- Switch to Login Navigation -->
+                            <div class="text-center mt-4 pt-2 border-top">
+                                <p class="text-muted small mb-0">
+                                    {{ t('already_registered') }}? 
+                                    <a href="{{ url_for('auth.login') }}" class="text-success fw-bold text-decoration-none ms-1">
+                                        <i class="bi bi-box-arrow-in-right"></i> {{ t('nav_login') }}
+                                    </a>
+                                </p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Back to Home Link -->
+                <div class="text-center mt-3">
+                    <a href="{{ url_for('main.index') }}" class="text-muted small text-decoration-none">
+                        <i class="bi bi-arrow-left me-1"></i> मुख्यपृष्ठावर परत जा / Return to Homepage
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    // Password Show/Hide Toggle
+    const toggleBtns = document.querySelectorAll(".btn-toggle-pw");
+    toggleBtns.forEach(btn => {
+        btn.addEventListener("click", () => {
+            const targetId = btn.getAttribute("data-target");
+            const input = document.getElementById(targetId);
+            const icon = btn.querySelector("i");
+            if (!input) return;
+            if (input.type === "password") {
+                input.type = "text";
+                icon.classList.remove("bi-eye");
+                icon.classList.add("bi-eye-slash");
+            } else {
+                input.type = "password";
+                icon.classList.remove("bi-eye-slash");
+                icon.classList.add("bi-eye");
+            }
+        });
+    });
+
+    // Mobile Number Numeric Filtering
+    const mobileInput = document.getElementById("mobileInput");
+    if (mobileInput) {
+        mobileInput.addEventListener("input", (e) => {
+            e.target.value = e.target.value.replace(/\D/g, "").slice(0, 10);
+        });
+    }
+
+    // Live Password Match Indicator
+    const pwInput = document.getElementById("passwordInput");
+    const confirmInput = document.getElementById("confirmPasswordInput");
+    const feedback = document.getElementById("pwMatchFeedback");
+
+    function checkPasswordMatch() {
+        if (!confirmInput.value) {
+            feedback.style.display = "none";
+            return;
+        }
+        feedback.style.display = "block";
+        if (pwInput.value === confirmInput.value) {
+            feedback.className = "small mt-1 text-success fw-semibold";
+            feedback.innerHTML = '<i class="bi bi-check-circle-fill me-1"></i> पासवर्ड जुळला आहे (Passwords match)';
+        } else {
+            feedback.className = "small mt-1 text-danger fw-semibold";
+            feedback.innerHTML = '<i class="bi bi-x-circle-fill me-1"></i> पासवर्ड जुळत नाही (Passwords do not match)';
+        }
+    }
+
+    if (pwInput && confirmInput) {
+        pwInput.addEventListener("input", checkPasswordMatch);
+        confirmInput.addEventListener("input", checkPasswordMatch);
+    }
+});
+</script>
+{% endblock %}

@@ -1,22 +1,97 @@
 {% extends "base.html" %}
 
-{% block title %}{{ t('nav_dashboard') }} - {{ t('app_name') }}{% endblock %}
+{% block title %}{{ t('nav_dashboard') }} - {{ farmer.full_name }} | {{ t('app_name') }}{% endblock %}
 
 {% block content %}
 <div class="container py-4">
-    <!-- Top Welcome Banner & District Selector -->
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-4 pb-3 border-bottom">
+    <!-- Top Welcome Banner & Farmer Profile Header -->
+    <div class="d-flex flex-column flex-lg-row justify-content-between align-items-start align-items-lg-center gap-3 mb-4 pb-3 border-bottom">
         <div>
-            <h1 class="h3 fw-bold mb-1">{{ t('dash_welcome') }}</h1>
-            <p class="text-muted small mb-0">{{ t('dash_subhead') }}</p>
+            <div class="d-flex align-items-center gap-2 mb-1">
+                <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-pill px-3 py-1 small">
+                    <i class="bi bi-patch-check-fill me-1"></i> {{ t('registered_member') }}
+                </span>
+                <span class="badge bg-light text-muted border rounded-pill px-2 py-1 small" style="font-size:0.75rem;">
+                    {{ t('member_id') }}: CK-MH-{{ "%04d"|format(farmer.id) }}
+                </span>
+            </div>
+            <h1 class="h3 fw-bold mb-1 text-dark">
+                {{ t('dash_welcome') }}, <span class="text-success">{{ farmer.full_name }}</span>!
+            </h1>
+            <p class="text-muted small mb-0">
+                <i class="bi bi-geo-alt-fill text-danger me-1"></i> {{ farmer.village }}, {{ farmer.district }}, {{ farmer.state }} • 
+                {{ t('dash_subhead') }}
+            </p>
         </div>
-        <div class="d-flex align-items-center gap-2">
-            <a href="{{ url_for('disease.scan_page') }}" class="btn btn-kisaan-primary">
+
+        <!-- Quick Top Action Controls -->
+        <div class="d-flex align-items-center gap-2 flex-wrap">
+            <a href="{{ url_for('disease.scan_page') }}" class="btn btn-kisaan-primary shadow-sm">
                 <i class="bi bi-camera-fill me-1"></i> {{ t('cta_scan_now') }}
             </a>
-            <a href="{{ url_for('weather.view_weather') }}" class="btn btn-outline-secondary">
+            <a href="{{ url_for('weather.view_weather', district=selected_district) }}" class="btn btn-outline-secondary">
                 <i class="bi bi-cloud-sun me-1"></i> {{ t('nav_weather') }}
             </a>
+            <a href="{{ url_for('auth.logout') }}" class="btn btn-outline-danger" title="लॉगआउट करा / Logout">
+                <i class="bi bi-box-arrow-right me-1"></i> {{ t('nav_logout') }}
+            </a>
+        </div>
+    </div>
+
+    <!-- Farmer Profile Card -->
+    <div class="kisaan-card mb-4 border-0 shadow-sm" style="background: linear-gradient(135deg, #f7fbf8, #edf7f0); border-left: 5px solid #2e7d56 !important;">
+        <div class="kisaan-card-body p-4">
+            <div class="row g-3 align-items-center">
+                <!-- Avatar & Identity -->
+                <div class="col-md-4 col-lg-3 border-end-md">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="farmer-avatar bg-success text-white rounded-circle shadow d-flex align-items-center justify-content-center fw-bold fs-3" style="width:64px; height:64px; flex-shrink:0;">
+                            {{ farmer.full_name[:2] }}
+                        </div>
+                        <div>
+                            <div class="fw-bold text-dark fs-5 mb-0">{{ farmer.full_name }}</div>
+                            <div class="small text-muted">
+                                <i class="bi bi-shield-check text-success me-1"></i> शेतकरी सभासद
+                            </div>
+                            <div class="small text-muted" style="font-size:0.75rem;">
+                                नोंदणी: {{ farmer.created_at[:10] if farmer.created_at else 'सक्रिय' }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Metadata Grid -->
+                <div class="col-md-8 col-lg-9">
+                    <div class="row g-2 text-dark small">
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="p-2 rounded bg-white border">
+                                <div class="text-muted" style="font-size:0.75rem;">{{ t('mobile_label') }}</div>
+                                <div class="fw-bold text-success"><i class="bi bi-telephone-fill me-1"></i> +91 {{ farmer.mobile_number }}</div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="p-2 rounded bg-white border">
+                                <div class="text-muted" style="font-size:0.75rem;">{{ t('email_label') }}</div>
+                                <div class="fw-semibold text-truncate" title="{{ farmer.email or 'नोंदणी नाही' }}">
+                                    <i class="bi bi-envelope me-1"></i> {{ farmer.email or 'नोंदणी नाही' }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="p-2 rounded bg-white border">
+                                <div class="text-muted" style="font-size:0.75rem;">गाव / शहर</div>
+                                <div class="fw-bold text-dark"><i class="bi bi-house-door-fill text-muted me-1"></i> {{ farmer.village }}</div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="p-2 rounded bg-white border">
+                                <div class="text-muted" style="font-size:0.75rem;">जिल्हा व राज्य</div>
+                                <div class="fw-bold text-dark"><i class="bi bi-geo-alt-fill text-danger me-1"></i> {{ farmer.district }}, {{ farmer.state }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -46,20 +121,22 @@
                 </div>
                 <div>
                     <div class="metric-lbl">{{ t('stat_recent_scans') }}</div>
-                    <div class="metric-val text-primary">{{ scans|length }}</div>
-                    <div class="small text-muted" style="font-size:0.75rem;">तपासलेली पाने</div>
+                    <div class="metric-val text-primary">{{ farmer_scans|length if has_personal_scans else scans|length }}</div>
+                    <div class="small text-muted" style="font-size:0.75rem;">
+                        {% if has_personal_scans %}आपले तपासलेले अहवाल{% else %}नमुना अहवाल उपलब्ध{% endif %}
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- 3. Agro-Weather Snapshot -->
+        <!-- 3. Agro-Weather Snapshot (Personalized to Farmer's District) -->
         <div class="col-sm-6 col-lg-3">
             <div class="metric-card accent-amber">
                 <div class="metric-icon-box bg-warning bg-opacity-10 text-warning">
                     <i class="bi {{ weather.icon.split(' ')[0] if weather else 'bi-cloud-sun' }}"></i>
                 </div>
                 <div>
-                    <div class="metric-lbl">{{ weather.district_mr if weather else 'पुणे' }} {{ t('stat_weather_alert') }}</div>
+                    <div class="metric-lbl">{{ weather.district_mr if weather else selected_district }} {{ t('stat_weather_alert') }}</div>
                     <div class="metric-val text-dark">{{ weather.temperature if weather else '२८' }}°C</div>
                     <div class="small text-muted" style="font-size:0.75rem;">
                         आर्द्रता: {{ weather.humidity if weather else '६२' }}% • 
@@ -81,6 +158,107 @@
                     <div class="metric-lbl">{{ t('stat_active_crops') }}</div>
                     <div class="metric-val">५ पिके</div>
                     <div class="small text-muted" style="font-size:0.75rem;">कापूस, सोयाबीन, टोमॅटो...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Crop Disease Detection Card & Weather Risk Alert Card -->
+    <div class="row g-4 mb-4">
+        <!-- Crop Disease Detection Center Card -->
+        <div class="col-lg-6">
+            <div class="kisaan-card h-100 border-success border-opacity-25">
+                <div class="kisaan-card-header bg-success bg-opacity-10">
+                    <div class="fw-bold text-success">
+                        <i class="bi bi-camera-fill me-2"></i>{{ t('disease_upload_title') }}
+                    </div>
+                    <span class="badge bg-success rounded-pill">AI Crop Doctor</span>
+                </div>
+                <div class="kisaan-card-body d-flex flex-column justify-content-between">
+                    <div>
+                        <p class="text-muted small mb-3">
+                            आपल्या शेतातील पिकाच्या पानावर डाग किंवा रोग दिसल्यास लगेच फोटो काढून मोफत तपासणी करा. आमचे संगणक मॉडेल काही सेकंदात रोगाचे अचूक निदान करून उपाय सुचवेल.
+                        </p>
+                        <div class="p-3 bg-light rounded-3 mb-3 border">
+                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                <span class="small fw-bold text-dark"><i class="bi bi-shield-check text-success me-1"></i> समर्थित पिके:</span>
+                                <span class="badge bg-white text-dark border">Maharashtra Staples</span>
+                            </div>
+                            <div class="d-flex flex-wrap gap-2 small">
+                                <span class="badge bg-white text-dark border"><i class="bi bi-flower1 text-success me-1"></i> कापूस (Cotton)</span>
+                                <span class="badge bg-white text-dark border"><i class="bi bi-flower1 text-success me-1"></i> सोयाबीन (Soybean)</span>
+                                <span class="badge bg-white text-dark border"><i class="bi bi-flower1 text-success me-1"></i> टोमॅटो (Tomato)</span>
+                                <span class="badge bg-white text-dark border"><i class="bi bi-flower1 text-success me-1"></i> ऊस (Sugarcane)</span>
+                                <span class="badge bg-white text-dark border"><i class="bi bi-flower1 text-success me-1"></i> भात (Rice)</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-2 mt-2">
+                        <a href="{{ url_for('disease.scan_page') }}" class="btn btn-kisaan-primary flex-grow-1 text-center justify-content-center">
+                            <i class="bi bi-camera me-1"></i> पानाचा फोटो तपासा (Scan Leaf)
+                        </a>
+                        <a href="{{ url_for('advisory.view_advisory') }}" class="btn btn-outline-secondary">
+                            <i class="bi bi-book"></i> सल्ला
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Weather Updates and Risk Alerts Card -->
+        <div class="col-lg-6">
+            <div class="kisaan-card h-100">
+                <div class="kisaan-card-header">
+                    <div class="fw-bold">
+                        <i class="bi bi-cloud-sun-fill text-warning me-2"></i>{{ t('weather_page_title') }}
+                    </div>
+                    <span class="badge bg-light text-dark border">{{ selected_district }} Station</span>
+                </div>
+                <div class="kisaan-card-body d-flex flex-column justify-content-between">
+                    <div>
+                        <!-- Live Risk Banner -->
+                        <div class="alert alert-{{ weather.risk.spray_badge if weather else 'success' }} bg-opacity-10 border-0 rounded-3 p-3 mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <i class="bi bi-exclamation-triangle-fill text-{{ weather.risk.spray_badge if weather else 'success' }} fs-5"></i>
+                                <span class="fw-bold">
+                                    {{ 'फवारणीसाठी हवामान अनुकूल आहे' if (weather and weather.risk.spray_ok) else 'सावधगिरी: सध्या फवारणी करणे टाळा' }}
+                                </span>
+                            </div>
+                            <p class="small mb-0 text-muted">
+                                {{ weather.risk.spray_reason if weather else 'वातावरणात योग्य तापमान आणि आर्द्रता आहे.' }}
+                            </p>
+                        </div>
+
+                        <!-- 3 Climate Parameters -->
+                        <div class="row g-2 text-center mb-3">
+                            <div class="col-4">
+                                <div class="p-2 rounded bg-light border">
+                                    <div class="text-muted small" style="font-size:0.75rem;">तापमान</div>
+                                    <div class="fw-bold fs-6">{{ weather.temperature if weather else '२८' }}°C</div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="p-2 rounded bg-light border">
+                                    <div class="text-muted small" style="font-size:0.75rem;">हवेतील आर्द्रता</div>
+                                    <div class="fw-bold fs-6">{{ weather.humidity if weather else '६२' }}%</div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="p-2 rounded bg-light border">
+                                    <div class="text-muted small" style="font-size:0.75rem;">बुरशी जोखीम</div>
+                                    <div class="fw-bold fs-6 text-{{ weather.risk.spray_badge if weather else 'success' }}">
+                                        {{ weather.risk.disease_risk_mr if weather else 'कमी' }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                        <span class="small text-muted"><i class="bi bi-info-circle me-1"></i>ओपन-मेटिओ कृषी उपग्रह डेटा</span>
+                        <a href="{{ url_for('weather.view_weather', district=selected_district) }}" class="btn btn-outline-primary btn-sm rounded-pill px-3">
+                            पूर्ण ७ दिवसांचा अंदाज <i class="bi bi-arrow-right ms-1"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -111,7 +289,7 @@
             <div class="kisaan-card h-100">
                 <div class="kisaan-card-header">
                     <div class="fw-bold"><i class="bi bi-graph-up text-primary me-2"></i>आठवड्याचा हवामान व आर्द्रता कल (Agro-Climate Trend)</div>
-                    <span class="badge bg-light text-dark border">{{ weather.district if weather else 'Pune' }} Station</span>
+                    <span class="badge bg-light text-dark border">{{ selected_district }} Station</span>
                 </div>
                 <div class="kisaan-card-body">
                     <div style="height: 240px; position: relative;">
@@ -119,18 +297,68 @@
                     </div>
                     <div class="d-flex justify-content-between align-items-center mt-3 text-muted small">
                         <span><i class="bi bi-info-circle text-primary me-1"></i>आर्द्रता ७०% पेक्षा जास्त असताना बुरशीचा धोका वाढतो.</span>
-                        <a href="{{ url_for('weather.view_weather') }}" class="text-primary text-decoration-none fw-semibold">पूर्ण अंदाज <i class="bi bi-arrow-right"></i></a>
+                        <a href="{{ url_for('weather.view_weather', district=selected_district) }}" class="text-primary text-decoration-none fw-semibold">पूर्ण अंदाज <i class="bi bi-arrow-right"></i></a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Recent Diagnostic History Table -->
+    <!-- Smart Farming Recommendations Section -->
+    <div class="kisaan-card mb-4">
+        <div class="kisaan-card-header bg-light">
+            <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-lightbulb-fill text-warning fs-5"></i>
+                <h5 class="fw-bold mb-0 text-dark">{{ t('smart_recommendations_title') }}</h5>
+            </div>
+            <a href="{{ url_for('advisory.view_advisory') }}" class="btn btn-outline-success btn-sm rounded-pill px-3">
+                सर्व पिके पहा (All Crops) <i class="bi bi-arrow-right ms-1"></i>
+            </a>
+        </div>
+        <div class="kisaan-card-body">
+            <div class="row g-3">
+                {% for rec in recommendations %}
+                <div class="col-md-6 col-lg-3">
+                    <div class="p-3 rounded-3 h-100 border bg-white shadow-sm d-flex flex-column justify-content-between">
+                        <div>
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25">{{ rec.crop }}</span>
+                                <span class="badge bg-{{ 'danger' if rec.severity == 'High' else 'warning' }} bg-opacity-10 text-{{ 'danger' if rec.severity == 'High' else 'dark' }}">{{ rec.category }}</span>
+                            </div>
+                            <h6 class="fw-bold text-dark mb-1" style="font-size:0.95rem;">{{ rec.title_mr }}</h6>
+                            <p class="text-muted small mb-2" style="font-size:0.8rem; line-height:1.4;">
+                                {{ rec.description_mr[:90] }}...
+                            </p>
+                        </div>
+                        <div class="pt-2 border-top mt-2">
+                            <div class="small fw-semibold text-success mb-1" style="font-size:0.75rem;">
+                                <i class="bi bi-leaf-fill me-1"></i> सेंद्रिय उपाय:
+                            </div>
+                            <p class="small text-muted mb-0" style="font-size:0.75rem;">
+                                {{ rec.organic_remedy_mr[:75] if rec.organic_remedy_mr else 'कडुनिंब तेल ५ मि.ली./लिटर फवारावे.' }}...
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Previous Disease Detection Reports Table -->
     <div class="kisaan-card mb-4">
         <div class="kisaan-card-header">
             <div>
-                <h5 class="fw-bold mb-0"><i class="bi bi-clock-history text-success me-2"></i>{{ t('recent_scans_title') }}</h5>
+                <h5 class="fw-bold mb-0">
+                    <i class="bi bi-clock-history text-success me-2"></i>{{ t('recent_scans_title') }}
+                </h5>
+                <p class="text-muted small mb-0">
+                    {% if has_personal_scans %}
+                    आपल्या शेतातील तपासलेले मागील अहवाल (Your Diagnostic Records)
+                    {% else %}
+                    प्रदर्शनासाठी नमुना अहवाल (Sample Reports for Demonstration)
+                    {% endif %}
+                </p>
             </div>
             <a href="{{ url_for('disease.scan_page') }}" class="btn btn-sm btn-kisaan-primary">
                 <i class="bi bi-plus-lg me-1"></i> नवीन पान तपासा
@@ -222,7 +450,7 @@
             <div>
                 <h6 class="fw-bold mb-1 text-success">आजचा महत्त्वाचा शेती सल्ला (Daily Advisory Tip)</h6>
                 <p class="small text-dark mb-0">
-                    ढगाळ हवामानात पानांवर ओलावा साचल्यास बुरशीचा प्रादुर्भाव वाढतो. अशा वेळी सकाळच्या वेळेत कडुनिंब अर्क (५ मि.ली./लिटर) प्रतिबंधात्मक फवारावा आणि पाण्याचा निचरा योग्य ठेवावा.
+                    ढगाळ हवामानात पानांवर ओलावा साचल्यास बुरशीचा प्रादुर्भाव वाढतो. अशा वेळी सकाळच्या वेळेत कडुनिंब अर्क (५ मि.ली./लिटर) प्रतिबंधात्मक फवारावा आणि शेतात पाण्याचा निचरा योग्य ठेवावा.
                 </p>
             </div>
         </div>

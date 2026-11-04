@@ -14,6 +14,7 @@ from app import create_app
 from app.services.weather_service import get_weather_data
 from app.services.ai_detector import analyze_leaf_image
 from app.config import Config
+from app.database import get_db_connection
 
 class CodeKisaanTestCase(unittest.TestCase):
     def setUp(self):
@@ -37,10 +38,213 @@ class CodeKisaanTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn(b"CodeKisaan", response.data)
 
-    def test_dashboard(self):
+    def test_dashboard_protected_unauthenticated(self):
+        # Unauthenticated request to protected dashboard should redirect to login
+        response = self.client.get("/dashboard")
+        self.assertEqual(response.status_code, 302)
+        self.assertIn("/login", response.location)
+
+    def test_dashboard_authenticated(self):
+        # Logged-in farmer should access dashboard and see charts and profile
+        with self.client.session_transaction() as sess:
+            sess["farmer_id"] = 1
+            sess["farmer_name"] = "रमेश पाटील (Ramesh Patil)"
+            sess["farmer_mobile"] = "9876543210"
+            sess["farmer_district"] = "Pune"
+
         response = self.client.get("/dashboard")
         self.assertEqual(response.status_code, 200)
         self.assertIn(b"cropHealthChart", response.data)
+        self.assertIn(b"weatherTrendChart", response.data)
+        self.assertIn("रमेश पाटील".encode("utf-8"), response.data)
+
+    def test_registration_page_get(self):
+        response = self.client.get("/register")
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b"full_name", response.data)
+        self.assertIn(b"mobile_number", response.data)
+        self.assertIn(b"village", response.data)
+        self.assertIn(b"district", response.data)
+        self.assertIn(b"password", response.data)
+
+    def test_registration_success(self):
+        test_mobile = "9123456789"
+        # Ensure clean state for test mobile
+        conn = get_db_connection()
+        conn.execute("DELETE FROM farmers WHERE mobile_number = ?", (test_mobile,))
+        conn.commit()
+        conn.close()
+
+        response = self.client.post("/register", data={
+            "full_name": "सुरेश देशमुख (Suresh Deshmukh)",
+            "mobile_number": test_mobile,
+            "email": "suresh.test@kisaan.org",
+            "password": "strongPassword123",
+            "confirm_password": "strongPassword123",
+            "village": "शिरूर",
+            "district": "Pune",
+            "state": "Maharashtra"
+        }, follow_redirects=True)
+
+        self.assertEqual(response.status_code, 200)
+        # Should redirect to dashboard upon successful registration
+        self.assertIn(b"cropHealthChart", response.data)
+
+        # Verify record in DB
+        conn = get_db_connection()
+        farmer = conn.execute("SELECT * FROM farmers WHERE mobile_number = ?", (test_mobile,)).fetchone()
+        conn.close()
+        self.assertIsNotNone(farmer)
+        self.assertEqual(farmer["village"], "शिरूर")
+        self.assertNotEqual(farmer["password_hash"], "strongPassword123")  # Hashed
+
+    def test_registration_duplicate_mobile(self):
+        # Demo farmer mobile is 9876543210
+        response = self.client.post("/register", data={
+            "full_name": "Duplicate Farmer",
+            "mobile_number": "9876543210",
+            "email": "unique.email@kisaan.org",
+            "password": "password123",
+            "confirm_password": "password123",
+            "village": "Haveli",
+            "district": "Pune",
+            "state": "Maharashtra"
+        }, follow_redirects=True)
+
+        self.assertEqual(response.status_code, 200)
+        # Should stay on register and show duplicate mobile warning
+        self.assertIn("आधीच नोंदणीकृत आहे".encode("utf-8"), response.data)
+
+    def test_registration_duplicate_email(self):
+        # Demo farmer email is ramesh.patil@kisaan.org
+        response = self.client.post("/register", data={
+            "full_name": "Email Duplicate Farmer",
+            "mobile_number": "9112233445",
+            "email": "ramesh.patil@kisaan.org",
+            "password": "password123",
+            "confirm_password": "password123",
+            "village": "Baramati",
+            "district": "Pune",
+            "state": "Maharashtra"
+        }, follow_redirects=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("हा ईमेल पत्ता आधीच वापरला गेला आहे".encode("utf-8"), response.data)
+
+    def test_registration_invalid_mobile(self):
+        response = self.client.post("/register", data={
+            "full_name": "Invalid Mobile Farmer",
+            "mobile_number": "12345",
+            "email": "",
+            "password": "password123",
+            "confirm_password": "password123",
+            "village": "Baramati",
+            "district": "Pune",
+            "state": "Maharashtra"
+        }, follow_redirects=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("वैध १० अंकी मोबाईल क्रमांक".encode("utf-8"), response.data)
+
+    def test_registration_password_mismatch(self):
+        response = self.client.post("/register", data={
+            "full_name": "Test Mismatch",
+            "mobile_number": "9998887776",
+            "email": "",
+            "password": "password123",
+            "confirm_password": "differentPassword",
+            "village": "Pune",
+            "district": "Pune",
+            "state": "Maharashtra"
+        }, follow_redirects=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("जुळत नाहीत".encode("utf-8"), response.data)
+
+    def test_registration_short_password(self):
+        response = self.client.post("/register", data={
+            "full_name": "Test Short",
+            "mobile_number": "9998887775",
+            "email": "",
+            "password": "123",
+            "confirm_password": "123",
+            "village": "Pune",
+            "district": "Pune",
+            "state": "Maharashtra"
+        }, follow_redirects=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("किमान ६ अक्षरांचा".encode("utf-8"), response.data)
+
+    def test_login_page_get(self):
+        response = self.client.get("/login")
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b"loginMobile", response.data)
+        self.assertIn(b"loginPassword", response.data)
+        self.assertIn(b"remember_me", response.data)
+        self.assertIn(b"9876543210", response.data)  # Demo credentials
+
+    def test_login_success(self):
+        response = self.client.post("/login", data={
+            "mobile_number": "9876543210",
+            "password": "password123",
+            "remember_me": "1"
+        }, follow_redirects=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b"cropHealthChart", response.data)
+        self.assertIn("रमेश पाटील".encode("utf-8"), response.data)
+
+    def test_login_invalid_password(self):
+        response = self.client.post("/login", data={
+            "mobile_number": "9876543210",
+            "password": "wrongPasswordXYZ"
+        }, follow_redirects=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("चुकीचा आहे".encode("utf-8"), response.data)
+
+    def test_login_nonexistent_user(self):
+        response = self.client.post("/login", data={
+            "mobile_number": "9000000001",
+            "password": "anyPassword"
+        }, follow_redirects=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("चुकीचा आहे".encode("utf-8"), response.data)
+
+    def test_logout(self):
+        # Set session as logged-in
+        with self.client.session_transaction() as sess:
+            sess["farmer_id"] = 1
+            sess["farmer_name"] = "रमेश पाटील"
+
+        response = self.client.get("/logout", follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("लॉगआउट".encode("utf-8"), response.data)
+
+        # After logout, accessing dashboard redirects to login
+        dash_response = self.client.get("/dashboard")
+        self.assertEqual(dash_response.status_code, 302)
+
+    def test_disease_scan_links_farmer(self):
+        # Logged in farmer performs a sample scan
+        with self.client.session_transaction() as sess:
+            sess["farmer_id"] = 1
+            sess["farmer_name"] = "रमेश पाटील"
+
+        response = self.client.post("/disease/analyze", data={
+            "crop_name": "Cotton",
+            "sample_image_name": "sample_cotton_leaf.jpg"
+        }, follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+
+        # Verify scan saved with farmer_id = 1
+        conn = get_db_connection()
+        latest_scan = conn.execute("SELECT * FROM scans ORDER BY id DESC LIMIT 1").fetchone()
+        conn.close()
+        self.assertIsNotNone(latest_scan)
+        self.assertEqual(latest_scan["farmer_id"], 1)
 
     def test_disease_scan_page(self):
         response = self.client.get("/disease/scan")

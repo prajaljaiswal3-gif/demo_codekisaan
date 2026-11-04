@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+
+{% block title %}{{ t('login_title') }} - {{ t('app_name') }}{% endblock %}
+
+{% block content %}
+<section class="py-5 bg-kisaan-light position-relative">
+    <div class="container py-2">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6 col-xl-5">
+                <!-- Login Card -->
+                <div class="kisaan-card auth-card shadow-lg border-0 overflow-hidden">
+                    <!-- Agricultural Decorative Header Banner -->
+                    <div class="auth-header-banner p-4 text-center text-white position-relative">
+                        <div class="brand-logo-icon mx-auto mb-3 shadow" style="width:54px; height:54px; font-size:1.8rem;">
+                            <i class="bi bi-flower1"></i>
+                        </div>
+                        <h1 class="h3 fw-bold mb-1 text-white">{{ t('login_title') }}</h1>
+                        <p class="text-white-50 small mb-0">
+                            {{ t('login_subhead') }}
+                        </p>
+                    </div>
+
+                    <div class="p-4 p-md-4">
+                        <!-- Quick Demo Credentials Box for Judges / Evaluators -->
+                        <div class="alert alert-light border border-success border-opacity-25 rounded-3 mb-4 p-3" style="background: #f0fdf4;">
+                            <div class="d-flex align-items-start justify-content-between gap-2">
+                                <div>
+                                    <div class="small fw-bold text-success mb-1">
+                                        <i class="bi bi-patch-question-fill me-1"></i> {{ t('demo_creds_title') }}
+                                    </div>
+                                    <div class="small text-muted" style="font-size:0.8rem;">
+                                        मोबाईल: <strong>9876543210</strong> • पासवर्ड: <strong>password123</strong>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-outline-success btn-sm rounded-pill py-1 px-2" style="font-size:0.75rem;" onclick="fillDemoCredentials()">
+                                    <i class="bi bi-lightning-charge-fill me-1"></i> ऑटो-भरा (Fill)
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Login Form -->
+                        <form method="POST" action="{{ url_for('auth.login') }}" id="farmerLoginForm" novalidate>
+                            {% if next %}
+                            <input type="hidden" name="next" value="{{ next }}">
+                            {% endif %}
+
+                            <!-- 1. Mobile Number -->
+                            <div class="mb-3">
+                                <label for="loginMobile" class="form-label fw-semibold text-dark">
+                                    {{ t('mobile_label') }} <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light text-success border-end-0 fw-bold">
+                                        <i class="bi bi-telephone-fill me-1"></i> +91
+                                    </span>
+                                    <input type="tel" 
+                                           class="form-control border-start-0" 
+                                           id="loginMobile" 
+                                           name="mobile_number" 
+                                           placeholder="उदा. 9876543210" 
+                                           value="{{ mobile_number or '' }}" 
+                                           required 
+                                           maxlength="10" 
+                                           pattern="[0-9]{10}"
+                                           autofocus>
+                                </div>
+                                <div class="form-text small">नोंदणी केलेला १० अंकी मोबाईल नंबर टाका.</div>
+                            </div>
+
+                            <!-- 2. Password with Show/Hide Toggle -->
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <label for="loginPassword" class="form-label fw-semibold text-dark mb-0">
+                                        {{ t('password_label') }} <span class="text-danger">*</span>
+                                    </label>
+                                </div>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light text-success border-end-0">
+                                        <i class="bi bi-lock-fill"></i>
+                                    </span>
+                                    <input type="password" 
+                                           class="form-control border-start-0 border-end-0" 
+                                           id="loginPassword" 
+                                           name="password" 
+                                           placeholder="आपला पासवर्ड प्रविष्ट करा" 
+                                           required>
+                                    <button class="btn btn-outline-secondary border-start-0 btn-toggle-pw" type="button" data-target="loginPassword" title="पासवर्ड पहा / लपवा">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- 3. Remember Me Checkbox -->
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="remember_me" value="1" id="rememberMeCheck" checked>
+                                    <label class="form-check-label small text-muted user-select-none" for="rememberMeCheck">
+                                        {{ t('remember_me') }}
+                                    </label>
+                                </div>
+                                <span class="badge bg-light text-success border small">
+                                    <i class="bi bi-shield-check me-1"></i> सुरक्षित लॉगिन
+                                </span>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="d-grid mb-3">
+                                <button type="submit" class="btn btn-kisaan-primary py-3 fs-6 rounded-3 shadow-sm fw-bold">
+                                    <i class="bi bi-box-arrow-in-right me-2"></i> {{ t('btn_login') }}
+                                </button>
+                            </div>
+
+                            <!-- Registration CTA Link -->
+                            <div class="text-center pt-3 border-top">
+                                <p class="text-muted small mb-0">
+                                    {{ t('new_farmer_prompt') }}? 
+                                    <a href="{{ url_for('auth.register') }}" class="text-success fw-bold text-decoration-none ms-1">
+                                        <i class="bi bi-person-plus-fill me-1"></i> {{ t('nav_register') }}
+                                    </a>
+                                </p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Back to Home Link -->
+                <div class="text-center mt-3">
+                    <a href="{{ url_for('main.index') }}" class="text-muted small text-decoration-none">
+                        <i class="bi bi-arrow-left me-1"></i> मुख्यपृष्ठावर परत जा / Return to Homepage
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    // Show/Hide Password Toggle
+    const toggleBtns = document.querySelectorAll(".btn-toggle-pw");
+    toggleBtns.forEach(btn => {
+        btn.addEventListener("click", () => {
+            const targetId = btn.getAttribute("data-target");
+            const input = document.getElementById(targetId);
+            const icon = btn.querySelector("i");
+            if (!input) return;
+            if (input.type === "password") {
+                input.type = "text";
+                icon.classList.remove("bi-eye");
+                icon.classList.add("bi-eye-slash");
+            } else {
+                input.type = "password";
+                icon.classList.remove("bi-eye-slash");
+                icon.classList.add("bi-eye");
+            }
+        });
+    });
+
+    // Mobile Number Numeric Filtering
+    const mobileInput = document.getElementById("loginMobile");
+    if (mobileInput) {
+        mobileInput.addEventListener("input", (e) => {
+            e.target.value = e.target.value.replace(/\D/g, "").slice(0, 10);
+        });
+    }
+});
+
+function fillDemoCredentials() {
+    const mobileInput = document.getElementById("loginMobile");
+    const passwordInput = document.getElementById("loginPassword");
+    if (mobileInput) mobileInput.value = "9876543210";
+    if (passwordInput) passwordInput.value = "password123";
+}
+</script>
+{% endblock %}
